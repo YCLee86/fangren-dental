@@ -28,8 +28,11 @@
    ── 不記什麼 ────────────────────────────────────────────────────────────
    不記 IP、不記 User-Agent、不發 cookie、不產生任何能串起同一個人的識別碼。
    送出去的就是「哪一顆、在哪一頁」兩個字串，其餘（時間）由 Worker 補。
-   ⚠ 連「這次瀏覽的流水號」都沒有，所以報告上看不出「同一個人先看了什麼
-     再打電話」——那是刻意的，理由在 src/search.js 的檔頭。
+   ⚠ 連「這次瀏覽的流水號」都沒有，所以這一份報告上看不出「同一個人先看了什麼
+     再打電話」——理由在 src/search.js 的檔頭。
+   ⚠ 2026-09-26 起「先看了什麼再打電話」改由**訪客軌跡**那一條另外記
+     （assets/path-log.js，另一個資料庫），它接這一支丟出來的 fangren:click 事件。
+     這一支本身沒有變：送出去的仍然只有兩個字串。
    ========================================================================== */
 (function () {
   var me = document.currentScript;
@@ -161,6 +164,9 @@
     var now = Date.now();
     if (code === lastCode && now - lastAt < 600) return;
     lastCode = code; lastAt = now; sent++;
+    /* 訪客軌跡（assets/path-log.js）接這一個事件，把同一個代碼記成這次來訪的一步。
+       ⚠ 這一份自己送出去的仍然只有「哪一顆、在哪一頁」，沒有代碼。 */
+    try { window.dispatchEvent(new CustomEvent('fangren:click', { detail: code })); } catch (e) {}
 
     var body = JSON.stringify({ code: code, scope: scope });
     try {

@@ -23,8 +23,8 @@
       理由同②：資料累積好幾年之後，一次要一整張表就是一次把當天的讀取額度用光。
       匯出本身一定要讀它匯出的那些列，這一筆省不掉，但至少不會一次爆掉。
    ④ **表名是白名單**，不是從網址直接拼進 SQL。
-   ⚠ 軌跡紀錄上線時會**另開一個資料庫**（binding 預計叫 PATHS，見 DECISIONS.md 那一列），
-     到時候在 DBS 加一筆就好，這一頁會自己多一塊。
+   ⚠ 軌跡紀錄另開一個資料庫（binding PATHS），已經列在 DBS 裡；
+     wrangler.toml 還沒綁的時候那一塊就不出現。
    ============================================================================= */
 
 import { nowIso, agoIso, keyOk } from "./search.js";
@@ -42,12 +42,17 @@ export const TABLES = {
   search_log: { label: "搜尋紀錄", cols: ["id", "q", "scope", "hits", "at"] },
   click_log:  { label: "點擊紀錄", cols: ["id", "code", "scope", "at"] },
   source_log: { label: "來源紀錄", cols: ["id", "src", "via", "host", "page", "at"] },
+  path_log:   { label: "訪客軌跡", cols: ["id", "sid", "n", "kind", "scope", "code", "src", "back", "at"] },
 };
 
 /* 資料庫：binding 是 wrangler.toml 裡的名字。沒有綁的（例如軌跡那一個還沒建）就跳過。 */
 export const DBS = [
   { binding: "DB", name: "fangren-dental-views", label: "計數器與紀錄",
     tables: ["search_log", "click_log", "source_log"], counter: true },
+  /* 軌跡另開一個（2026-09-26，理由見 src/paths.js 的①）。每日摘要 path_day 不列：
+     它是從 path_log 算出來的，匯出原始逐筆就夠了。 */
+  { binding: "PATHS", name: "fangren-dental-paths", label: "訪客軌跡",
+    tables: ["path_log"] },
 ];
 
 const json = (data, status = 200) =>

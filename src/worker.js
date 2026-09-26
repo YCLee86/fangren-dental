@@ -18,6 +18,8 @@
      GET  /api/source-report?win=30d           → 同上（同一把 X-Report-Key）
      GET  /api/store-report                   → 資料庫用了多少、幾時會滿（同一把 X-Report-Key）
      GET  /api/export?table=click_log&month=2026-09 → 某張表某個月的原始逐筆（同上，備份用）
+     POST /api/path    body: { "sid": "…", "n": 1, "k": "v", "s": "home" } → { ok: true }
+     GET／POST /api/path-report?op=…         → 訪客軌跡報告要的資料（同一把 X-Report-Key）
      /admin/*                                 → 報告頁＋noindex＋no-store（見下方 ADMIN_PREFIX）
      其他                                        → 靜態檔，沒有就給 404 頁
 
@@ -30,6 +32,7 @@ import { logSearch, searchReport } from "./search.js";
 import { logClick, clickReport } from "./click.js";
 import { logSource, sourceReport } from "./source.js";
 import { storeReport, exportRows } from "./store.js";
+import { logPath, pathReport } from "./paths.js";
 
 const allowed = new Set(ALLOWED);
 
@@ -207,6 +210,17 @@ export default {
 
     if (url.pathname === "/api/export") {
       if (request.method === "GET") return exportRows(request, url, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    /* 訪客軌跡（2026-09-26）。寫進另一個資料庫 PATHS，沒綁就安靜地不作用（見 src/paths.js）。 */
+    if (url.pathname === "/api/path") {
+      if (request.method === "POST") return logPath(request, env);
+      return json({ error: "method not allowed" }, 405);
+    }
+
+    if (url.pathname === "/api/path-report") {
+      if (request.method === "GET" || request.method === "POST") return pathReport(request, url, env);
       return json({ error: "method not allowed" }, 405);
     }
 

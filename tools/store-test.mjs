@@ -140,7 +140,7 @@ eq(tbl((await store()).body, "click_log").rows, count("click_log"),
 }
 
 console.log("\n【四】不整張表掃描（設計②）");
-for (const t of Object.keys(TABLES)) {
+for (const t of DBS[0].tables) {   /* 計數器那一個資料庫的三張；軌跡那一張的守門在 tools/path-test.mjs */
   const plan = env.DB.raw.prepare(`EXPLAIN QUERY PLAN
     SELECT (SELECT MAX(id) FROM ${t}) AS hi, (SELECT MIN(id) FROM ${t}) AS lo,
            (SELECT MIN(at) FROM ${t}) AS first, (SELECT MAX(at) FROM ${t}) AS last,

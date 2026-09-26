@@ -111,3 +111,25 @@ CREATE TABLE IF NOT EXISTS source_quota (
   day TEXT    PRIMARY KEY,
   n   INTEGER NOT NULL DEFAULT 0
 );
+
+-- =============================================================================
+-- 訪客軌跡（2026-09-26）—— ⚠ 這幾張在**另一個資料庫** fangren-dental-paths（binding PATHS），
+-- 不在這一個。同上不必手動執行：src/paths.js 第一次用到時自己建。
+-- 識別碼只有 sid（分頁代碼，sessionStorage，30 分鐘閒置換一組）。沒有 IP、UA、cookie。
+-- =============================================================================
+-- CREATE TABLE IF NOT EXISTS path_log (
+--   id    INTEGER PRIMARY KEY AUTOINCREMENT,
+--   sid   TEXT    NOT NULL,              -- 分頁代碼，12 碼小寫英數
+--   n     INTEGER NOT NULL,              -- 這次來訪的第幾步
+--   kind  TEXT    NOT NULL,              -- 'view'（看了一頁）或 'click'（按了一顆）
+--   scope TEXT    NOT NULL,              -- 在哪一頁（同 click_log.scope）
+--   code  TEXT,                          -- 按了哪一顆（同 click_log.code），view 是 NULL
+--   src   TEXT,                          -- 只有第一步有：從哪裡來（同 source_log.src，另有 'resume'）
+--   back  INTEGER NOT NULL DEFAULT 0,    -- 1 ＝ 上一頁／下一頁回來的
+--   at    TEXT    NOT NULL
+-- );
+-- CREATE INDEX idx_path_at  ON path_log (at);
+-- CREATE INDEX idx_path_sid ON path_log (sid, n);
+-- CREATE TABLE path_quota (day TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0);
+-- CREATE TABLE path_day (day TEXT PRIMARY KEY, v INTEGER NOT NULL, data TEXT NOT NULL, at TEXT NOT NULL);
+--   ↑ 每一天（台灣時間）的摘要，由報告頁算好存回來，見 assets/path-summary.js

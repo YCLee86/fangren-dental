@@ -147,10 +147,18 @@ td.q { word-break: break-word; }
 .db p { margin: .5rem 0 0; font-size: .85rem; }
 .db p.state { font-weight: 600; }
 .db p.state.warn { color: var(--miss); }
-.db p.note, p.note { color: var(--ink-soft); font-size: .78rem; }
+.note { color: var(--ink-soft); font-size: .78rem; }
 .db table { margin-top: .7rem; background: transparent; }
 .exp { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .6rem 0 0; font-size: .85rem; }
 button:disabled { opacity: .5; cursor: default; }
+/* ---- 訪客軌跡那一份（2026-09-26）----------------------------------------
+   路徑一步一個小框，離站動作用松綠的字（它是這一份真正要看的那一步）。 */
+.seq { line-height: 1.9; }
+.seq .st { display: inline-block; padding: 0 .35rem; border: 1px solid var(--rule); border-radius: 6px; font-size: .78rem; white-space: nowrap; }
+.seq .st.act { color: var(--hit); border-color: var(--hit); font-weight: 600; }
+.seq .st.in { border-style: dashed; color: var(--ink-soft); }
+.seq i { font-style: normal; color: var(--ink-soft); font-size: .7rem; margin: 0 .15rem; }
+td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
 .exp select { font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .3rem .4rem; }
 @media (max-width: 400px) {
   .sum { grid-template-columns: 1fr 1fr; }
@@ -239,6 +247,38 @@ button:disabled { opacity: .5; cursor: default; }
       <div id="r-t-log"></div>
     </div>
 
+    <!-- 訪客軌跡那一份（2026-09-26）。資料在 src/paths.js，歸納在 assets/path-summary.js。
+         ⚠ 一次「來訪」＝ 同一個分頁、中間沒有停超過 30 分鐘的那一串。認不出同一個人隔天又來。 -->
+    <div id="view-path" hidden>
+      <p class="note" id="p-msg"></p>
+      <div class="sum">
+        <div><span>來訪次數</span><strong id="p-all">—</strong></div>
+        <div><span>平均看幾頁</span><strong id="p-avg">—</strong></div>
+        <div><span>有採取行動</span><strong id="p-conv">—</strong></div>
+      </div>
+
+      <h2>訪客類型<small>每一次來訪歸成一種，規則寫在表下面</small></h2>
+      <div id="p-t-type"></div>
+
+      <h2>最常見的路徑<small>只列看了哪幾頁與離站動作，站內的按鈕不算</small></h2>
+      <div id="p-t-path"></div>
+
+      <h2>從哪一頁進來、最後有沒有行動</h2>
+      <div id="p-t-entry"></div>
+
+      <h2>看完這一頁，下一步去哪<small>每一頁列前三名</small></h2>
+      <div id="p-t-next"></div>
+
+      <h2>從哪裡來、最後有沒有行動</h2>
+      <div id="p-t-src"></div>
+
+      <h2>最後停在哪一頁<small>離開網站之前看的最後一頁</small></h2>
+      <div id="p-t-exit"></div>
+
+      <h2>最近 30 次來訪<small>逐步；虛線框是站內的按鈕，綠框是離站動作</small></h2>
+      <div id="p-t-recent"></div>
+    </div>
+
     <!-- 資料庫那一份（2026-09-26）。資料在 src/store.js。
          ⚠ 這一份沒有「期間」與「來源」那兩排尺，也沒有底下那顆「下載 CSV」——
            它的匯出是完整的原始逐筆（備份用），和那顆只拼畫面上那批資料的不是同一件事。 -->
@@ -265,6 +305,7 @@ button:disabled { opacity: .5; cursor: default; }
 </main>
 
 
+<script src="../../assets/path-summary.js"></script>
 <script>
 (function () {
   var STORE = 'fangren:report-key';
@@ -281,18 +322,20 @@ button:disabled { opacity: .5; cursor: default; }
   /* 使用者指定的七格，加一格「全部」。value 是天數代碼，給兩個報告端點共用。 */
   var WINS = [['7d', '一週'], ['30d', '一個月'], ['60d', '兩個月'], ['90d', '三個月'],
               ['180d', '半年'], ['365d', '一年'], ['730d', '兩年'], ['all', '全部']];
-  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄'], ['source', '來源紀錄'], ['store', '資料庫']];
+  var TABS = [['search', '搜尋紀錄'], ['click', '點擊紀錄'], ['source', '來源紀錄'], ['path', '訪客軌跡'], ['store', '資料庫']];
   /* 「來源」那把尺兩份不一樣：搜尋框只出現在首頁與七科頁，點擊則每一頁都有。 */
   var SCOPES = {
     search: [['', '全部'], ['home', '全站搜尋'], ['topic', '各科頁內']],
     click:  [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']],
     source: [['', '全部'], ['home', '首頁'], ['topic', '科別頁'], ['post', '文章頁']],
+    path: [],
     store: []
   };
   var TITLE = {
     search: ['搜尋紀錄', '訪客在站上搜尋框打過的字。沒有記錄 IP、瀏覽器或任何身分資訊。'],
     click:  ['點擊紀錄', '訪客按過站上哪些連結與按鈕。同樣沒有記錄 IP、瀏覽器或任何身分資訊。'],
     source: ['來源紀錄', '訪客從哪裡點進網站。只算從站外進來的那一下，同樣沒有記錄 IP、瀏覽器或任何身分資訊。'],
+    path:   ['訪客軌跡', '同一次來訪依序看了哪些頁、按了什麼。一次來訪 ＝ 同一個分頁、中間沒停超過 30 分鐘；認不出同一個人隔天又來。同樣沒有記錄 IP、瀏覽器或 cookie。'],
     store:  ['資料庫', '紀錄存在 Cloudflare 的資料庫裡，一個資料庫最多 500 MB。這裡看用了多少、照現在的速度幾時會滿，以及把原始資料匯出備份。']
   };
 
@@ -381,8 +424,8 @@ button:disabled { opacity: .5; cursor: default; }
 
   var $ = function (id) { return document.getElementById(id); };
   var key = '', win = '30d', tab = 'search';
-  var scope = { search: '', click: '', source: '', store: '' };
-  var data = { search: null, click: null, source: null, store: null };
+  var scope = { search: '', click: '', source: '', path: '', store: '' };
+  var data = { search: null, click: null, source: null, path: null, store: null };
 
   /* ---- 時間：資料庫存的是 UTC 的 ISO 字串，畫面上一律台灣時間 -------------
      ⚠ 不要自己 +8 —— toLocaleString 帶 timeZone 才會處理各種邊界，
@@ -441,7 +484,10 @@ button:disabled { opacity: .5; cursor: default; }
   function views() {
     TABS.forEach(function (t) { $('view-' + t[0]).hidden = tab !== t[0]; });
     /* 資料庫那一份沒有期間、來源兩排尺，也沒有「下載 CSV」（它有自己的完整匯出）。 */
-    $('wins').hidden = $('scopes').hidden = $('csv').hidden = tab === 'store';
+    $('wins').hidden = tab === 'store';
+    /* 訪客軌跡那一份有期間，但沒有「來源」那一排（一次來訪會跨好幾種頁），
+       也沒有「下載 CSV」（原始逐筆在資料庫那一份匯出）。 */
+    $('scopes').hidden = $('csv').hidden = tab === 'store' || tab === 'path';
   }
 
   /* 換分頁：標題與兩塊畫面先換，資料沒有或期間不同才去拿。 */
@@ -738,12 +784,7 @@ button:disabled { opacity: .5; cursor: default; }
       '<p class="empty">這個環境沒有綁定任何資料庫。</p>';
     if (!exp.busy) paintExport(d);
   }
-  function getJson(u) {
-    return fetch(u, { headers: { 'X-Report-Key': key } }).then(function (r) {
-      if (!r.ok) throw new Error('伺服器回了 ' + r.status);
-      return r.json();
-    });
-  }
+  function getJson(u) { return req(u); }
   $('st-go').addEventListener('click', function () {
     if (exp.busy) return;
     var table = exp.table, msg = $('st-msg');
@@ -787,6 +828,189 @@ button:disabled { opacity: .5; cursor: default; }
     }).then(function () { exp.busy = false; $('st-go').disabled = false; });
   });
 
+  /* ---- 訪客軌跡 ------------------------------------------------------------
+     拿資料的三步（理由見 src/paths.js 的④⑤）：
+       ① 已經算定的日子讀摘要（op=days）
+       ② 還沒有摘要的日子讀原始逐筆、在這裡歸納，算定了就存回去（op=day）——一天只算一次
+       ③ 今天（與還沒過完 3 小時緩衝的昨天）每次都現算、不存
+     ⚠ 一天以台灣時間切；「一週」＝ 今天往回共 7 天。 */
+  var PS = window.fangrenPathSummary;
+  var PAPI = '../../api/path-report';
+  var WDAYS = { '7d': 7, '30d': 30, '60d': 60, '90d': 90, '180d': 180, '365d': 365, '730d': 730 };
+  function twDayOf(ms) { return new Date(ms + 8 * 3600000).toISOString().slice(0, 10); }
+  function dStart(d) { return new Date(d + 'T00:00:00+08:00').getTime(); }
+  function isoOf(ms) { return new Date(ms).toISOString().replace(/\.\d+Z$/, 'Z'); }
+  function addDays(d, k) { var t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); }
+  function pathMsg(t) { $('p-msg').textContent = t; }
+  function rowsBetween(fromMs, toMs) {
+    var out = [];
+    function next(after) {
+      return req(PAPI + '?op=rows&from=' + isoOf(fromMs) + '&to=' + isoOf(toMs) + '&after=' + after).then(function (j) {
+        out = out.concat(j.rows || []);
+        pathMsg('讀取原始紀錄中…已拿到 ' + out.length + ' 筆');
+        return j.next != null ? next(j.next) : out;
+      });
+    }
+    return next(0);
+  }
+  function loadPath(w) {
+    var now = Date.now(), today = twDayOf(now);
+    var since = WDAYS[w] ? addDays(today, 1 - WDAYS[w]) : '0000-01-01';
+    pathMsg('讀取中…');
+    return req(PAPI + '?op=days&since=' + since).then(function (j) {
+      if (j.off) return { off: true };
+      var recent = req(PAPI + '?op=recent');
+      if (!j.first) return recent.then(function (r) { return { sum: PS.merge([]), recent: r.rows || [], days: 0 }; });
+      var settle = (j.settleH || 3) * 3600000;
+      var stored = {};
+      (j.days || []).forEach(function (x) { if (x.v === PS.V) { try { stored[x.day] = JSON.parse(x.data); } catch (e) {} } });
+      var start = since > twDayOf(new Date(j.first).getTime()) ? since : twDayOf(new Date(j.first).getTime());
+      var all = [], d;
+      for (d = start; d <= today; d = addDays(d, 1)) all.push(d);
+      var missing = all.filter(function (x) { return !stored[x]; });
+      /* 缺的日子連成一段一段（最多 31 天一段）一次撈，撈回來再照日子切。 */
+      var chunks = [], cur = null;
+      missing.forEach(function (x) {
+        if (cur && addDays(cur[cur.length - 1], 1) === x && cur.length < 31) cur.push(x);
+        else { cur = [x]; chunks.push(cur); }
+      });
+      var sums = all.filter(function (x) { return stored[x]; }).map(function (x) { return stored[x]; });
+      var p = Promise.resolve();
+      chunks.forEach(function (c) {
+        p = p.then(function () {
+          var a = dStart(c[0]), b = Math.min(dStart(addDays(c[c.length - 1], 1)) + settle, now + 60000);
+          return rowsBetween(a, b).then(function (rows) {
+            var saves = [];
+            c.forEach(function (day) {
+              var s0 = dStart(day), s1 = dStart(addDays(day, 1));
+              var sum = PS.summarize(PS.group(rows, isoOf(s0), isoOf(s1)));
+              sums.push(sum);
+              if (s1 + settle <= now) {
+                saves.push(req(PAPI + '?op=day', { method: 'POST',
+                  body: JSON.stringify({ day: day, v: PS.V, data: JSON.stringify(sum) }) }).catch(function () {}));
+              }
+            });
+            return Promise.all(saves);
+          });
+        });
+      });
+      return p.then(function () { return recent; }).then(function (r) {
+        pathMsg(missing.length > 2 ? '這一次補算了 ' + missing.length + ' 天的摘要，下次打開會快很多。' : '');
+        return { sum: PS.merge(sums), recent: r.rows || [], days: all.length, first: j.first };
+      });
+    });
+  }
+
+  var ACT = { '!tel': '打電話', '!map': '開導航', '!park': '停車場導航', '!line': '加 LINE', '!fb': '醫師臉書', '!out': '離開' };
+  var TYPE = [
+    ['act1', '直接行動', '只看了一頁就打電話或開導航'],
+    ['compare', '比較型', '看了兩頁以上（或看過醫師）才採取行動'],
+    ['ret', '回診型', '從首頁進來、沒看文章，看了門診表、地址或停車就走'],
+    ['info', '資訊型', '只看了一篇文章或一科就走'],
+    ['browse', '瀏覽型', '看了幾頁、沒有採取行動']
+  ];
+  var PSRC = { resume: '閒置後接著逛', unknown: '不明' };
+  function tokName(t) {
+    if (t === '~') return '其他';
+    if (ACT[t]) return ACT[t];
+    if (t === 'home') return '首頁';
+    var m = /^topic:(.+)$/.exec(t);
+    if (m) return SPEC[m[1]] || m[1];
+    m = /^post:(.+)$/.exec(t);
+    return m ? title(m[1], 14) : t;
+  }
+  function stepHtml(t, cls) { return '<span class="st' + (cls ? ' ' + cls : '') + '">' + esc(tokName(t)) + '</span>'; }
+  function seqHtml(str) {
+    if (str === '~') return '<span class="st">其他（名次以外的路徑）</span>';
+    return str.split('>').map(function (t) {
+      return t === '…' ? '<span class="st in">…</span>' : stepHtml(t, t.charAt(0) === '!' ? 'act' : '');
+    }).join('<i>→</i>');
+  }
+  var pct = function (a, b) { return b ? Math.round(a / b * 100) + '%' : '—'; };
+  function sorted(m) { return Object.keys(m).sort(function (a, b) { return m[b] - m[a]; }); }
+  function pathTable(box, head, m, conv, total, nameOf, limit) {
+    var keys = sorted(m).slice(0, limit || 30);
+    if (!keys.length) { box.innerHTML = '<p class="empty">這段期間還沒有資料。</p>'; return; }
+    var h = '<table class="rank hit"><thead><tr><th>' + head + '</th><th class="n">次數</th><th class="n">佔</th>' +
+            (conv ? '<th class="n">有行動</th>' : '') + '</tr></thead><tbody>';
+    keys.forEach(function (k) {
+      h += '<tr><td class="q seq">' + nameOf(k) + '</td><td class="n"><b>' + m[k] + '</b></td><td class="p">' +
+           pct(m[k], total) + '</td>' + (conv ? '<td class="p">' + pct(conv[k] || 0, m[k]) + '</td>' : '') + '</tr>';
+    });
+    box.innerHTML = h + '</tbody></table>';
+  }
+  function renderPath(d) {
+    if (d.off) {
+      pathMsg('');
+      $('p-t-type').innerHTML = '<p class="empty">訪客軌跡的資料庫還沒有接上（Cloudflare 那一個 D1 還沒綁到網站）。接上之後這裡就會開始有資料。</p>';
+      ['p-t-path', 'p-t-entry', 'p-t-next', 'p-t-src', 'p-t-exit', 'p-t-recent'].forEach(function (id) { $(id).innerHTML = ''; });
+      $('p-all').textContent = $('p-avg').textContent = $('p-conv').textContent = '—';
+      $('span').textContent = '';
+      return;
+    }
+    var s = d.sum;
+    $('p-all').textContent = s.sessions;
+    $('p-avg').textContent = s.sessions ? (s.views / s.sessions).toFixed(1) : '—';
+    $('p-conv').textContent = s.sessions ? s.converted + '（' + pct(s.converted, s.sessions) + '）' : '—';
+
+    var h = '<table class="rank hit"><thead><tr><th>類型</th><th class="n">次數</th><th class="n">佔</th></tr></thead><tbody>';
+    TYPE.forEach(function (t) {
+      h += '<tr><td class="q"><b>' + t[1] + '</b><br><small class="note">' + t[2] + '</small></td><td class="n"><b>' +
+           (s.types[t[0]] || 0) + '</b></td><td class="p">' + pct(s.types[t[0]] || 0, s.sessions) + '</td></tr>';
+    });
+    $('p-t-type').innerHTML = h + '</tbody></table>';
+
+    pathTable($('p-t-path'), '路徑', s.paths, null, s.sessions, seqHtml, 20);
+    pathTable($('p-t-entry'), '進站頁', s.entries, s.entriesConv, s.sessions, function (k) { return stepHtml(k); });
+    pathTable($('p-t-src'), '來源', s.src, s.srcConv, s.sessions, function (k) { return esc(PSRC[k] || srcName(k)); });
+    pathTable($('p-t-exit'), '最後一頁', s.exits, null, s.sessions, function (k) { return stepHtml(k); });
+
+    /* 轉移表：「從」那一格按流出次數排，每一格列前三個下一步 */
+    var from = {};
+    Object.keys(s.trans).forEach(function (k) {
+      var ab = k.split('\t'); if (ab.length !== 2 || ab[0].charAt(0) === '!') return;
+      (from[ab[0]] = from[ab[0]] || { n: 0, to: {} }).n += s.trans[k];
+      from[ab[0]].to[ab[1]] = s.trans[k];
+    });
+    var fk = Object.keys(from).sort(function (a, b) { return from[b].n - from[a].n; }).slice(0, 15);
+    if (!fk.length) $('p-t-next').innerHTML = '<p class="empty">這段期間還沒有資料。</p>';
+    else {
+      h = '<table><thead><tr><th>看完</th><th>下一步（佔幾成）</th></tr></thead><tbody>';
+      fk.forEach(function (a) {
+        var to = from[a].to;
+        h += '<tr><td class="q seq">' + stepHtml(a) + '</td><td class="q seq">' + sorted(to).slice(0, 3).map(function (b) {
+          return stepHtml(b, b.charAt(0) === '!' && b !== '!out' ? 'act' : (b === '!out' ? 'in' : '')) +
+                 ' <small class="note">' + pct(to[b], from[a].n) + '</small>';
+        }).join('<br>') + '</td></tr>';
+      });
+      $('p-t-next').innerHTML = h + '</tbody></table>';
+    }
+
+    /* 最近 30 次：逐步全列，站內的按鈕也列（虛線框），才看得出他在那一頁做了什麼 */
+    var by = {}, order = [];
+    (d.recent || []).forEach(function (r) { if (!by[r.sid]) { by[r.sid] = []; order.push(r.sid); } by[r.sid].push(r); });
+    var list = order.map(function (k) { return by[k].sort(function (a, b) { return a.n - b.n; }); })
+                    .filter(function (ev) { return ev[0].n === 1; })
+                    .sort(function (a, b) { return a[0].at < b[0].at ? 1 : -1; });
+    if (!list.length) $('p-t-recent').innerHTML = '<p class="empty">還沒有任何一次來訪。</p>';
+    else {
+      h = '<table><thead><tr><th class="t">開始</th><th>一步一步</th></tr></thead><tbody>';
+      list.forEach(function (ev) {
+        var steps = ev.map(function (e) {
+          if (e.kind === 'view') return stepHtml(e.scope) + (e.back ? '<small class="note">（返回）</small>' : '');
+          var a = /^(tel$|line$|map:|park:|fb:)/.test(e.code || '') ? 'act' : 'in';
+          return '<span class="st ' + a + '">' + esc(codeName(e.code)) + '</span>';
+        }).join('<i>→</i>');
+        var src = ev[0].src ? (PSRC[ev[0].src] || srcName(ev[0].src)) : '';
+        h += '<tr><td class="t">' + tw(ev[0].at) + (src ? '<br>' + esc(src.split('（')[0]) : '') + '</td><td class="q seq">' + steps + '</td></tr>';
+      });
+      $('p-t-recent').innerHTML = h + '</tbody></table>';
+    }
+
+    var txt = d.first ? '資料從 ' + tw(d.first) + ' 開始累積。' : '目前還沒有任何一次來訪的紀錄。';
+    $('span').textContent = txt + '　一天以台灣時間切，一次來訪算在它開始的那一天。時間是台灣時間。';
+  }
+
   function render() {
     var d = data[tab];
     if (!d) return;
@@ -794,6 +1018,7 @@ button:disabled { opacity: .5; cursor: default; }
     if (tab === 'search') renderSearch(d);
     else if (tab === 'click') renderClick(d);
     else if (tab === 'store') { renderStore(d); $('span').textContent = '時間是台灣時間。'; return; }
+    else if (tab === 'path') { renderPath(d); return; }
     else renderSource(d);
 
     /* 資料從哪天開始 —— 「兩年」那一格在上線初期一定比實際資料長很多，
@@ -813,21 +1038,25 @@ button:disabled { opacity: .5; cursor: default; }
   }
 
   /* ---- 取資料 -------------------------------------------------------------- */
+  function req(u, opt) {
+    opt = opt || {};
+    opt.headers = { 'X-Report-Key': key };
+    return fetch(u, opt).then(function (r) {
+      if (r.status === 401) throw new Error('密碼不對。');
+      /* ⚠ 503 ＝ Cloudflare 後台還沒設 REPORT_KEY。這跟密碼打錯是兩件事，
+         混在一起講的話，人會在一組其實正確的密碼上反覆試。 */
+      if (r.status === 503) throw new Error('Cloudflare 後台還沒有設密碼（REPORT_KEY）——' +
+        '不是你打錯。設好之後回到這一頁重按一次就會進去。');
+      if (!r.ok) throw new Error('伺服器回了 ' + r.status + '，等一下再試一次。');
+      return r.json();
+    });
+  }
   function load() {
-    var t = tab;
+    var t = tab, w = win;
     $('err').hidden = true;
-    fetch(API[t] + '?win=' + encodeURIComponent(win), { headers: { 'X-Report-Key': key } })
-      .then(function (r) {
-        if (r.status === 401) throw new Error('密碼不對。');
-        /* ⚠ 503 ＝ Cloudflare 後台還沒設 REPORT_KEY。這跟密碼打錯是兩件事，
-           混在一起講的話，人會在一組其實正確的密碼上反覆試。 */
-        if (r.status === 503) throw new Error('Cloudflare 後台還沒有設密碼（REPORT_KEY）——' +
-          '不是你打錯。設好之後回到這一頁重按一次就會進去。');
-        if (!r.ok) throw new Error('伺服器回了 ' + r.status + '，等一下再試一次。');
-        return r.json();
-      })
+    (t === 'path' ? loadPath(w) : req(API[t] + '?win=' + encodeURIComponent(w)))
       .then(function (j) {
-        if (t === 'store') j.win = win;
+        if (t === 'store' || t === 'path') j.win = w;
         data[t] = j;
         $('gate').hidden = true;
         $('app').hidden = false;
@@ -857,7 +1086,7 @@ button:disabled { opacity: .5; cursor: default; }
   $('reload').addEventListener('click', function () { load(); });
   $('out').addEventListener('click', function () {
     try { localStorage.removeItem(STORE); } catch (x) {}
-    key = ''; data = { search: null, click: null, source: null, store: null };
+    key = ''; data = { search: null, click: null, source: null, path: null, store: null };
     $('key').value = '';
     $('app').hidden = true;
     $('gate').hidden = false;
