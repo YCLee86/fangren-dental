@@ -6445,7 +6445,7 @@ html.pv-js .pv-group.pv-out {
 .pv-rail.cards {
   display: flex; grid-template-columns: none; gap: 1rem; min-width: 0; max-width: 100%;
   overflow-x: auto; padding-bottom: .7rem;
-  scroll-snap-type: x proximity; scrollbar-width: thin;
+  scroll-snap-type: x proximity;
   /* ⚠⚠ 自動滑動的時候一定要把吸附關掉。scroll-snap 會把每一幀的小位移
      吸回最近的那一格，畫面上看到的是「每隔幾秒跳一張卡」，不是緩慢滑動
      （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）。 */
@@ -6475,6 +6475,18 @@ html[data-theme="dark"] .pv-tab[aria-selected="false"] {
   border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
   color: var(--pill-ink);
 }
+/* 橫幅的捲軸。⚠⚠ 滑得動的那幾科會多一條水平捲軸、滑不動的沒有 ——
+   在 Windows 那種**傳統捲軸**上，那一條是真的佔高度的，所以顯微根管、齒顎矯正
+   這種看起來就比牙周、兒童矮一截（2026-09-26 使用者回報）。
+   ⚠ 這個容器（headless Linux）用的是**覆蓋式捲軸**，浮在內容上、不佔空間，
+     所以在這裡量 offsetHeight − clientHeight 三種模式都是 0，**驗不出來**。
+     不要因為量不到就當作沒事。
+   隱藏 ＝ 站上那排科別標記的做法（它也是橫捲，也是把捲軸藏起來、靠邊緣淡出提示）。
+   留位 ＝ 捲軸照顯示，但沒有捲軸的時候也把那條高度留著，八科等高。 */
+html[data-pvsb="hide"] .pv-rail.cards { scrollbar-width: none; }
+html[data-pvsb="hide"] .pv-rail.cards::-webkit-scrollbar { display: none; }
+html[data-pvsb="stable"] .pv-rail.cards { scrollbar-width: thin; scrollbar-gutter: stable; }
+html[data-pvsb="auto"] .pv-rail.cards { scrollbar-width: thin; }
 html[data-pvglide="1"] .pv-rail.cards { scroll-snap-type: none; }
 html[data-pvall="0"] .pv-all { display: none; }
 /* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
@@ -10469,6 +10481,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <div class="pv-row"><span class="pv-lab">換科動畫</span><span class="pv-seg" data-k="f">
       <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">橫幅捲軸</span><span class="pv-seg" data-k="sb">
+      <button data-v="hide">隱藏</button><button data-v="stable">留位（八科等高）</button><button data-v="auto">跟著需要</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">過場長度</span><span class="pv-seg" data-k="l">
       <button data-v="same">同標籤 0.6</button><button data-v="l30">0.3 秒</button><button data-v="l20">0.2 秒</button><button data-v="l15">0.15 秒</button><button data-v="l10">0.1 秒</button><button data-v="l0">直接換</button>
     </span></div>
@@ -10499,7 +10514,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -10698,6 +10713,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     D.setAttribute('data-pvcur', st.cur);
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
     D.setAttribute('data-pvd', st.d);
+    D.setAttribute('data-pvsb', st.sb);
     D.style.setProperty('--pv-tabt', XT[st.x]);
     D.style.setProperty('--pv-fxease', EASE[st.e]);
     sizeCards();
