@@ -1167,11 +1167,9 @@ html[data-theme="dark"] .sk.tag-on { color: var(--sk-ink); }
 
 /* ---- 那一塊 ---- */
 .pd { padding-top: 1.6rem; }
-.pd-head { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
-/* 標題的樣子和內文的 h2 一樣（前面那一小段枝條），只是上下的邊距交給 .pd 自己管 */
-.post-body .pd-head h2 { margin: 0; }
-.pd-more { font-size: .9rem; color: var(--accent-deep); text-decoration: none; white-space: nowrap; }
-.pd-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* 標題「○○醫師」的樣子和內文的 h2 一樣（前面那一小段枝條），只是上下的邊距交給 .pd 自己管。
+   ⚠ 2026-09-26 起標題旁邊不再有「○○・N 位 ›」（使用者：「2位都不用」）。 */
+.post-body .pd > h2 { margin: 0 0 1rem; }
 /* ⚠ 放在 .post-body 裡，文章的 ul／li 規則會漏進來（左內距 1.35rem、每一項下邊距 .5rem），這裡擋掉 */
 .post-body .pd-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }

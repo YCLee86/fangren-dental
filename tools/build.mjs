@@ -587,9 +587,12 @@ const DOCS_START = "<!-- DOCS:START — 由 tools/build.mjs 產生，請勿手�
 const DOCS_END = "<!-- DOCS:END -->";
 const PEEK_START = "<!-- DOCPEEK:START — 由 tools/build.mjs 產生 -->";
 const PEEK_END = "<!-- DOCPEEK:END -->";
+/* 標題「○○醫師」用的科別名 ＝ 首頁「主題與科別」那一排的字（一般牙科那一顆是「一般牙科・定期檢查」，取前半）。
+   ⚠ 2026-09-26 使用者：「這裡只要寫　齒顎矯正醫師　這一科的醫師　2位都不用」——
+     標題原本是「這一科的醫師」、右上角有一個「齒顎矯正・2 位 ›」連到著陸頁，兩個都拿掉了。 */
 const SPEC_NAME = {
   general: "一般牙科", perio: "牙周治療", ortho: "齒顎矯正", kids: "兒童牙科",
-  surg: "口腔外科", prosth: "假牙與植牙", endo: "顯微根管",
+  surg: "口腔外科", prosth: "植牙・假牙重建", endo: "顯微根管",
 };
 const allDoctors = (() => {
   const h = read(INDEX_FILE);
@@ -630,14 +633,11 @@ const docsBlock = (spec) => {
   if (!list.length) return "";
   return `${DOCS_START}
     <section class="pd" id="pd" aria-labelledby="pd-h">
-      <div class="pd-head">
-        <h2 id="pd-h">這一科的醫師</h2>
-        <a class="pd-more" href="/topics/${spec}/#doctors">${SPEC_NAME[spec]}・${list.length} 位<span aria-hidden="true"> ›</span></a>
-      </div>
+      <h2 id="pd-h">${SPEC_NAME[spec]}醫師</h2>
       <ul class="pd-rows">
 ${list.map((d) => docRow(d, spec)).join("\n")}
       </ul>
-      <button class="pd-btt" type="button" aria-label="看這一科的 ${list.length} 位醫師"><span aria-hidden="true">醫師<svg viewBox="0 0 12 7"><path d="M1 1l5 5 5-5"/></svg></span></button>
+      <button class="pd-btt" type="button" aria-label="看${SPEC_NAME[spec]}醫師"><span aria-hidden="true">醫師<svg viewBox="0 0 12 7"><path d="M1 1l5 5 5-5"/></svg></span></button>
     </section>
     ${DOCS_END}`;
 };

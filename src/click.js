@@ -99,7 +99,8 @@ export function normCode(raw) {
       return DOC_FB.has(v) ? code : null;
     case "doc":                         /* 文章裡「這一科的醫師」的某一位 → 首頁那張卡 */
       return DOCS.has(v) ? code : null;
-    case "doc-more":                    /* 那一塊右上角「○○・N 位 ›」→ 著陸頁 */
+    case "doc-more":                    /* 那一塊右上角「○○・N 位 ›」→ 著陸頁。⚠ 2026-09-26 那一顆拿掉了，
+                                           只留著讓 09-25 那一天記到的舊資料報告上還讀得懂 */
       return SPECS.has(v) ? code : null;
     case "tag":                         /* 文章頁最上面那顆科別標記 */
       return SPECS.has(v) ? code : null;

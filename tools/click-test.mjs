@@ -308,7 +308,6 @@ await one('.foot-tel a', "tel", "post:missing-tooth", "文章頁尾的電話");
 await one('.pd-peek', "doc-peek", "post:missing-tooth", "頂端那一行底下的「N 位醫師」");
 await one('.pd-btt', "doc-btn", "post:missing-tooth", "右下角那一顆「醫師」");
 await one('.pd-go[href$="#doc-yang-xiaoying"]', "doc:yang-xiaoying", "post:missing-tooth", "那一塊裡的某一位 → 首頁那張卡");
-await one('.pd-more', "doc-more:prosth", "post:missing-tooth", "那一塊右上角「○○・N 位」→ 著陸頁");
 await page.goto(base + "/posts/bass-brushing/", { waitUntil: "load" });
 await page.waitForTimeout(200);
 await one('.post-nav a.btn-ghost', "back-list", "post:bass-brushing",
