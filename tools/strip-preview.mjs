@@ -80,8 +80,6 @@ const newArticles =
   '<div class="sec-head"><h2>最新文章</h2></div>'
   + '<div class="cards pv-top">' + topHtml + '</div>\n'
   + '<div class="pv-strip">'
-  + '<div class="pv-shead"><h3 class="pv-stitle">照科別看</h3>'
-  + '<span class="pv-hint" hidden>自動播放中 —— 點一下就停</span></div>'
   + '<div class="pv-tabs" role="tablist">' + tabs + '</div>'
   + '<div class="pv-groups">' + groups + '</div>'
   + '</div>\n'
@@ -123,12 +121,10 @@ html[data-pvn="2"] .pv-top .card[data-pvi="2"] { display: flex; }
 html[data-pvn="3"] .pv-top .card[data-pvi="2"],
 html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
 
-.pv-shead { display: flex; align-items: baseline; gap: .7rem; margin: 0 0 .55rem; }
-.pv-stitle { margin: 0; font-size: .96rem; font-weight: 500; color: var(--ink); }
-.pv-hint { font-size: .76rem; color: var(--ink-soft); }
 
 /* 標籤：逐條照站上 .chips 的宣告抄過來（同字級、同內距、同圓角、同色權）。
    不共用那個 class —— 站上那支篩選腳本認 .chips [data-spec]，混進去會被它接管。 */
+.pv-strip { margin-top: 1.2rem; }
 .pv-tabs { display: flex; gap: .55rem; overflow-x: auto; padding: .1rem .1rem .6rem; scrollbar-width: none; }
 .pv-tabs::-webkit-scrollbar { display: none; }
 .pv-tab {
@@ -182,11 +178,10 @@ html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="1
 html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
 html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="3"] { display: none; }
 
-@media (min-width: 721px) {
-  .pv-rail.cards > .card { flex-basis: var(--pv-cwd, 44%); }
-}
+/* ⚠ 卡寬只有一個來源：--pv-cw，由 JS 照「這一條橫幅實際有多寬」現算成 px。
+   原本這裡還有兩個寫死的覆蓋值（電腦 30%、平板 44%），結果「一屏幾張」那條尺
+   在電腦上按了完全沒反應 —— 它只改得到手機那一條宣告。 */
 @media (min-width: 1041px) {
-  .pv-rail.cards > .card { flex-basis: var(--pv-cwl, 30%); }
   .pv-top { display: grid; gap: 1.4rem; grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -255,16 +250,16 @@ const bar = `
       <button data-v="g1">極慢 8</button><button data-v="g2">很慢 14</button><button data-v="g3">慢 25</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">換科快慢</span><span class="pv-seg" data-k="s">
-      <button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button><button data-v="s3">7 秒</button>
+      <button data-v="s0">2 秒</button><button data-v="s4">2.5 秒</button><button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">標籤換色</span><span class="pv-seg" data-k="x">
-      <button data-v="x1">0.25 秒</button><button data-v="x2">0.45 秒</button><button data-v="x3">0.8 秒</button>
+      <button data-v="x2">0.45 秒</button><button data-v="x4">0.6 秒</button><button data-v="x5">0.7 秒</button><button data-v="x3">0.8 秒</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
       <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">一屏幾張</span><span class="pv-seg" data-k="w">
-      <button data-v="115">1.15</button><button data-v="135">1.35</button><button data-v="160">1.6</button>
+      <button data-v="w1">少</button><button data-v="w2">中</button><button data-v="w3">多</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">全部那條</span><span class="pv-seg" data-k="d">
       <button data-v="on">接在大卡後面</button><button data-v="off">完整 20 篇</button>
@@ -280,7 +275,7 @@ const bar = `
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's2', x: 'x2', p: 'keep', w: '135', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's2', x: 'x2', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -297,8 +292,8 @@ const bar = `
      換科要再快一點）。原本停留時間是從「這一條滑得完」反推的，兩件事綁在一起，
      滑得愈慢就停得愈久 —— 他要的正好是相反的組合。 */
   var V = { g1: 8, g2: 14, g3: 25 };                    /* 橫向滑動，px/s，定速 */
-  var SPEED = { s1: 3000, s2: 4500, s3: 7000 };         /* 一科停多久就換 */
-  var XT = { x1: '.25s', x2: '.45s', x3: '.8s' };       /* 標籤換色的時間 */
+  var SPEED = { s0: 2000, s4: 2500, s1: 3000, s2: 4500 }; /* 一科停多久就換 */
+  var XT = { x2: '.45s', x4: '.6s', x5: '.7s', x3: '.8s' }; /* 標籤換色的時間 */
 
   D.classList.add('pv-js');
 
@@ -403,7 +398,7 @@ const bar = `
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
     D.setAttribute('data-pvd', st.d);
     D.style.setProperty('--pv-tabt', XT[st.x]);
-    D.style.setProperty('--pv-cw', (100 / (parseInt(st.w, 10) / 100) - 4).toFixed(1) + '%');
+    sizeCards();
     url();
   }
   document.addEventListener('click', function (e) {
@@ -435,6 +430,22 @@ const bar = `
     f.hidden = !f.hidden;
     this.textContent = f.hidden ? '細調' : '收起';
   });
+
+  /* 一屏看到幾張：手機、平板、電腦各有自己的三段（同一個數字在三種寬度上
+     意思差太多）。卡寬照「這一條橫幅實際量到的寬」現算成 px，
+     n 張卡 ＋ (n−1) 個間距要剛好填滿，所以 cardW = (railW − (n−1)×gap) ÷ n。 */
+  var WN = {
+    phone:  { w1: 1.15, w2: 1.35, w3: 1.6 },
+    tablet: { w1: 1.8,  w2: 2.2,  w3: 2.7 },
+    desk:   { w1: 2.6,  w2: 3.2,  w3: 4.0 }
+  };
+  function sizeCards() {
+    var r = railOf(idx); if (!r) return;
+    var railW = r.clientWidth, gap = 16;
+    var band = railW < 560 ? 'phone' : (railW < 980 ? 'tablet' : 'desk');
+    var n = WN[band][st.w] || WN[band].w2;
+    D.style.setProperty('--pv-cw', Math.round((railW - (n - 1) * gap) / n) + 'px');
+  }
 
   /* ---- 量測面板。要量畫出來的東西，不要量屬性。 ---- */
   function measure(why) {
@@ -477,7 +488,7 @@ const bar = `
 
   show(0); paint(); startAuto();
   addEventListener('load', function () { measure('load'); });
-  addEventListener('resize', function () { measure('resize'); });
+  addEventListener('resize', function () { sizeCards(); measure('resize'); });
   setTimeout(function () { measure('t'); }, 400);
 })();
 </script>
