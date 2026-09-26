@@ -6380,6 +6380,15 @@ html[data-theme="dark"] [data-topic="kids"] .tp-intro::before { background-image
 html[data-pvn="2"] .pv-top .card[data-pvi="2"] { display: flex; }
 html[data-pvn="3"] .pv-top .card[data-pvi="2"],
 html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
+/* 自動：一排剛好排得下幾張就顯示幾張。斷點**照站上 .cards 那一組**
+   （≥1041 三欄、721~1040 兩欄、≤720 一欄），不要另外發明一組 ——
+   .pv-top 本身就掛著 cards，欄數是站上那三條在決定，張數跟它對齊才不會出現
+   「兩欄放三張」那種 2＋1 的斷行（2026-09-26 使用者截圖回報）。
+   ⚠ 這三條要寫在上面那幾條的後面：同一個權重，靠順序決勝。 */
+html[data-pvn="auto"] .pv-top .card[data-pvi="2"],
+html[data-pvn="auto"] .pv-top .card[data-pvi="3"] { display: flex; }
+@media (max-width: 1040px) { html[data-pvn="auto"] .pv-top .card[data-pvi="3"] { display: none; } }
+@media (max-width: 720px)  { html[data-pvn="auto"] .pv-top .card[data-pvi="2"] { display: none; } }
 
 
 /* 標籤：逐條照站上 .chips 的宣告抄過來（同字級、同內距、同圓角、同色權）。
@@ -6451,14 +6460,15 @@ html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="1
 html[data-pvd="on"][data-pvn="2"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
 html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
 html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="2"],
-html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="3"] { display: none; }
+html[data-pvd="on"][data-pvn="3"] .pv-group[data-spec="all"] .card[data-pvdup="3"],
+html[data-pvd="on"][data-pvn="auto"] .pv-group[data-spec="all"] .card[data-pvdup] { display: none; }
+@media (max-width: 1040px) { html[data-pvd="on"][data-pvn="auto"] .pv-group[data-spec="all"] .card[data-pvdup="3"] { display: flex; } }
+@media (max-width: 720px)  { html[data-pvd="on"][data-pvn="auto"] .pv-group[data-spec="all"] .card[data-pvdup="2"] { display: flex; } }
 
 /* ⚠ 卡寬只有一個來源：--pv-cw，由 JS 照「這一條橫幅實際有多寬」現算成 px。
    原本這裡還有兩個寫死的覆蓋值（電腦 30%、平板 44%），結果「一屏幾張」那條尺
    在電腦上按了完全沒反應 —— 它只改得到手機那一條宣告。 */
-@media (min-width: 1041px) {
-  .pv-top { display: grid; gap: 1.4rem; grid-template-columns: repeat(3, 1fr); }
-}
+
 
 /* 對照現況：把新的收起來、把原本那二十張直排放出來。
    ⚠ 不可以用 hidden 屬性 —— .cards 的 display:grid 是作者樣式，
@@ -10422,7 +10432,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <button data-v="both">科別＋卡片滑動</button><button data-v="spec">只換科別</button><button data-v="off">關掉</button>
   </span></div>
   <div class="pv-row"><span class="pv-lab">上面大卡</span><span class="pv-seg" data-k="n">
-    <button data-v="1">1 張</button><button data-v="2">2 張</button><button data-v="3">3 張</button>
+    <button data-v="auto">自動（跟版面）</button><button data-v="1">1 張</button><button data-v="2">2 張</button><button data-v="3">3 張</button>
   </span>
   <button class="pv-more" id="pv-more" type="button">細調</button></div>
   <div class="pv-fine" id="pv-fine" hidden>
@@ -10453,7 +10463,11 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's5', x: 'x4', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  /* 預設 ＝ 2026-09-26 使用者在電腦上挑定的那一組（他的截圖逐格對過）：
+   自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
+   滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
+   ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
