@@ -84,23 +84,25 @@ if (doctors.length !== 9) throw new Error('醫師卡不是九張：' + doctors.l
    一篇可以對到好幾個專長；一個專長的文章在小框裡照上架日期新到舊排。
    ⚠ 值裡帶「?」的是**待使用者確認**的那幾格（提案頁照樣畫出來讓他點點看）。 */
 const POST_SK = {
-  'regular-checkup':     ['口腔檢查', '牙周照護?'],
-  'three-month-recall':  ['口腔檢查?'],
-  'bass-brushing':       ['牙周照護?'],
+  /* 第五輪（2026-09-26）使用者逐格確認過的版本 */
+  'regular-checkup':     ['口腔檢查', '一般牙科治療', '牙周照護'],
+  'three-month-recall':  ['口腔檢查', '一般牙科治療', '牙周照護'],
+  'bass-brushing':       ['口腔檢查', '一般牙科治療', '牙周照護'],
   'gum-bleeding':        ['牙周照護', '牙周病治療'],
-  'perio-prevalence':    ['牙周照護'],
-  'perio-full-mouth':    ['牙周病治療'],
+  'perio-prevalence':    ['牙周照護', '牙周病治療'],
+  'perio-full-mouth':    ['牙周病治療', '牙周照護'],
   'perio-laser':         ['牙周病治療', '水雷射牙周治療', '牙周再生手術'],
   'orthodontics':        ['齒顎矯正', '隱適美'],
   'aligner-simulation':  ['隱適美', '齒顎矯正'],
-  'kids-first-visit':    ['兒童齲齒治療?'],
+  'kids-first-visit':    ['兒童齲齒治療'],
   'kids-crown':          ['兒童齲齒治療'],
   'kids-sedation':       ['兒童鎮靜麻醉'],
   'kids-arch-expansion': ['兒童早期矯正', '兒童隱適美'],
   'wisdom-eruption':     ['阻生齒拔除'],
-  'wisdom-tooth':        ['阻生齒拔除', '齒槽骨保留術'],
+  /* ⚠ 不對「齒槽骨保留術」—— 使用者：「拔智齒之後 沒有齒槽骨保留術」 */
+  'wisdom-tooth':        ['阻生齒拔除'],
   'crown-materials':     ['固定假牙'],
-  'missing-tooth':       ['活動假牙', '牙橋', '植牙手術', '固定假牙?'],
+  'missing-tooth':       ['活動假牙', '牙橋', '植牙手術', '固定假牙'],
   'implant-lifespan':    ['植牙手術'],
   'bioceramic':          ['顯微根管', '活髓治療'],
   'pulp-calcification':  ['顯微根管'],
