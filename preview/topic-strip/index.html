@@ -6426,9 +6426,22 @@ html.pv-js .pv-group.pv-on { display: block; }
    ⚠ 不做「兩組同時疊著對拉」的 cross-fade —— 那要把七組一起留在版面上
    （grid 疊層 ＋ visibility），二十張卡的圖會全部被載進來。 */
 @keyframes pv-fade { from { opacity: 0; } to { opacity: 1; } }
-html.pv-js .pv-group.pv-on { animation: pv-fade var(--pv-tabt, .6s) ease both; }
+@keyframes pv-fadeout { from { opacity: 1; } to { opacity: 0; } }
+html.pv-js .pv-group.pv-on { animation: pv-fade var(--pv-fxin, .6s) ease both; }
+/* 出場有兩種，分開兩個 class：
+   pv-dim ＝ 留在版面裡淡出（「先出後進」用）。這時候它是唯一看得見的一組，
+     抽掉的話容器會塌成 0 高、整頁跳一下。
+   pv-out ＝ 疊在新的那一組上面淡出（「疊著對拉」用），position:absolute 不佔版面。
+     ⚠ 只有「出」跟「進」兩組會同時在版面上，不是七組 —— 所以不會把二十張圖一起載進來。
+   ⚠ 兩條都要寫在 .pv-on 後面：同權重靠順序決勝，不然出場會被進場的動畫蓋掉。 */
+html.pv-js .pv-group.pv-dim { animation: pv-fadeout var(--pv-fxout, .3s) ease both; }
+html.pv-js .pv-group.pv-out {
+  display: block; position: absolute; inset: 0; pointer-events: none;
+  animation: pv-fadeout var(--pv-fxout, .6s) ease both;
+}
 
 .pv-strip, .pv-groups, .pv-group { min-width: 0; }
+.pv-groups { position: relative; }
 .pv-rail.cards {
   display: flex; grid-template-columns: none; gap: 1rem; min-width: 0; max-width: 100%;
   overflow-x: auto; padding-bottom: .7rem;
@@ -10453,6 +10466,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <div class="pv-row"><span class="pv-lab">滑動速度</span><span class="pv-seg" data-k="g">
       <button data-v="g1">極慢 8</button><button data-v="g2">很慢 14</button><button data-v="g3">慢 25</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">換科動畫</span><span class="pv-seg" data-k="f">
+      <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
       <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
@@ -10477,7 +10493,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -10503,10 +10519,60 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   D.classList.add('pv-js');
 
   function railOf(i) { return groups[i].querySelector('.pv-rail'); }
+
+  /* 換科那一下，圖卡怎麼交棒。標籤的顏色一律在第 0 毫秒就開始變、T 毫秒後全亮
+     （T ＝ 標籤換色那條尺），四種做法都讓圖卡在同一個 T 到位：
+       a 同時淡入   ——「舊的直接收、新的從 0 淡上來」。中間那一瞬間最空。
+       b 先出後進   —— 舊的先淡掉一半的時間，再換新的淡上來。
+                      ⚠ 空的那一刻只是從第 0 毫秒搬到中點，而且是真的兩邊都 0。
+       c 0.4 秒才換 —— 舊的整整撐到 400ms 都還在，然後用剩下的時間對拉換掉。
+       x 疊著對拉   —— 舊的疊在新的上面淡出，新的同時淡入，**沒有任何一刻是空的**。
+     ⚠ 這幾種的「顯示中的那一組」和 idx 會有一小段不同步（b 與 c 先改 idx、
+       晚一點才換畫面），所以橫向滑動那一支要看 shown 不是 idx，
+       不然它會去捲一組還沒被顯示出來的橫幅，切進來的時候就會跳一下。 */
+  var shown = 0, fxTimer = null;
+  function tdur() { return Math.round(parseFloat(XT[st.x]) * 1000); }
+  function applyGroups(inMs) {
+    D.style.setProperty('--pv-fxin', Math.max(0, Math.round(inMs)) + 'ms');
+    groups.forEach(function (g, j) {
+      g.classList.toggle('pv-on', j === idx);
+      g.classList.remove('pv-dim'); g.classList.remove('pv-out');
+    });
+    shown = idx;
+  }
   function show(i) {
+    var prev = idx;
     idx = (i + groups.length) % groups.length;
-    groups.forEach(function (g, j) { g.classList.toggle('pv-on', j === idx); });
     tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === idx ? 'true' : 'false'); });
+    if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
+    groups.forEach(function (g) { g.classList.remove('pv-dim'); g.classList.remove('pv-out'); });
+    var T = tdur();
+    if (prev === idx || !T) { applyGroups(0); return; }
+    var old = groups[prev];
+    if (st.f === 'x') {
+      D.style.setProperty('--pv-fxout', T + 'ms');
+      applyGroups(T);
+      old.classList.add('pv-out');
+      fxTimer = setTimeout(function () { old.classList.remove('pv-out'); fxTimer = null; }, T + 60);
+    } else if (st.f === 'b') {
+      D.style.setProperty('--pv-fxout', Math.round(T / 2) + 'ms');
+      old.classList.add('pv-dim');
+      fxTimer = setTimeout(function () { applyGroups(T / 2); fxTimer = null; }, T / 2);
+    } else if (st.f === 'c') {
+      /* 撐到 400ms 都還是舊的，然後用剩下的時間**對拉**換掉。
+         ⚠ 第一版是「時間到就換、新的從 0 淡上來」，量出來 470ms 那一刻
+         畫面總不透明度是 0 —— 空檔只是從開頭搬到 400ms 之後，沒有解決。 */
+      var hold = Math.min(400, Math.max(0, T - 120));
+      fxTimer = setTimeout(function () {
+        var rest = T - hold;
+        D.style.setProperty('--pv-fxout', rest + 'ms');
+        applyGroups(rest);
+        old.classList.add('pv-out');
+        fxTimer = setTimeout(function () { old.classList.remove('pv-out'); fxTimer = null; }, rest + 60);
+      }, hold);
+    } else {
+      applyGroups(T);
+    }
   }
   function stopAuto(why) {
     if (stopped) return;
@@ -10531,7 +10597,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     var last = performance.now();
     function step(now) {
       if (stopped || st.a !== 'both') { raf = null; D.removeAttribute('data-pvglide'); return; }
-      var r = railOf(idx), dt = Math.min(0.05, (now - last) / 1000); last = now;
+      var r = railOf(shown), dt = Math.min(0.05, (now - last) / 1000); last = now;
       if (r) {
         var max = r.scrollWidth - r.clientWidth;
         if (max > 2) {
@@ -10544,9 +10610,9 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
              十幾圈之後一樣卡死。做法是**記下「這一條已經滑完」，等換科之後
              （那時它已經 display:none）再把它歸零**，下次輪回來從第一張重新滑。
              在畫面上歸零的話會看到它跳一下。 */
-          var cur = (gpos[idx] || 0) + V[st.g] * dt;
-          if (cur >= max) { cur = max; done[idx] = true; }
-          gpos[idx] = cur; r.scrollLeft = cur;
+          var cur = (gpos[shown] || 0) + V[st.g] * dt;
+          if (cur >= max) { cur = max; done[shown] = true; }
+          gpos[shown] = cur; r.scrollLeft = cur;
         }
       }
       raf = requestAnimationFrame(step);
