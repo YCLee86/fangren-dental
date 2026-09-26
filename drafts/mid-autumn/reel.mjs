@@ -1,6 +1,6 @@
 /* 中秋節・臉書 Reel（9:16，1080×1920，30fps，約 20 秒，無聲）
    ---------------------------------------------------------------------------
-   node drafts/mid-autumn/reel.mjs            → drafts/mid-autumn/reel.mp4 ＋ reel-sheet.jpg（關鍵影格）
+   node drafts/mid-autumn/reel.mjs            → drafts/mid-autumn/reel.mp4 ＋ reel-sheet.jpg（關鍵影格）＋ reel-cover.jpg（封面）
    node drafts/mid-autumn/reel.mjs --sheet    → 只出關鍵影格，不出影片（調鏡頭時用）
 
    素材只有兩樣，都是已經定稿的：
@@ -117,7 +117,9 @@ await page.evaluate(async ({ SRC, MARK, W, H, CAM, LINES, CLOSE, DUR }) => {
   const ease = (x) => 0.5 - Math.cos(Math.PI * x) / 2;
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   /* 取景 → 「縮放倍率 s ＋ 影像的哪一點落在畫面的哪一點」。fit 模式整張圖寬 1080、放在畫面偏下 */
-  const FIT = { s: W / IW, px: IW / 2, py: IH / 2, fy: 1040 };
+  /* 收尾那一格同時是**封面**：臉書的格狀縮圖會把 9:16 裁成正中央的方形（y 420~1500），
+     所以標題、標誌與整張圖都要落在那一段裡 —— 圖放 y 694~1500、標題 510、標誌 612。 */
+  const FIT = { s: W / IW, px: IW / 2, py: IH / 2, fy: 1097 };
   /* 滿版的時候，圖的下緣停在 STAGE（不是畫面底）：Reels 最下面那一段會被說明與按鈕蓋住，
      而這張圖的人全都在下緣那 1/3 —— 貼到畫面底的話人正好被蓋掉。STAGE 以下接一段暗色。 */
   const STAGE = 1560;
@@ -173,11 +175,11 @@ await page.evaluate(async ({ SRC, MARK, W, H, CAM, LINES, CLOSE, DUR }) => {
     /* 收尾：中秋佳節平安 ＋ 標誌與診所名 */
     const a = clamp((t - CLOSE.t0) / 0.6, 0, 1);
     if (a > 0) {
-      text(CLOSE.text, 380, 76, a, 700);
+      text(CLOSE.text, 510, 76, a, 700);
       g.save(); g.globalAlpha = clamp((t - CLOSE.t0 - 0.5) / 0.6, 0, 1);
       const mw = 88, mh = mw * 21.834 / 44.304, label = "芳仁牙醫診所";
       g.font = `500 40px "Noto Sans TC"`; g.letterSpacing = "4px";
-      const tw = g.measureText(label).width, gap = 18, x0 = (W - mw - gap - tw) / 2, y = 520;
+      const tw = g.measureText(label).width, gap = 18, x0 = (W - mw - gap - tw) / 2, y = 612;
       g.shadowColor = "rgba(6,10,24,.7)"; g.shadowBlur = 14;
       g.drawImage(mark, x0, y - mh / 2, mw, mh);
       g.fillStyle = "#f4f4f5"; g.textBaseline = "middle"; g.textAlign = "left";
@@ -208,6 +210,10 @@ await page.evaluate(async ({ SRC, MARK, W, H, CAM, LINES, CLOSE, DUR }) => {
   }, shots);
   fs.writeFileSync(path.join(HERE, "reel-sheet.jpg"), Buffer.from(sheet.split(",")[1], "base64"));
   console.log("✓ drafts/mid-autumn/reel-sheet.jpg");
+  /* 封面：影片最後那一格，單獨存一張，上傳時「從相簿選封面」用 */
+  const cover = await page.evaluate((t) => window.frame(t), 19.2);
+  fs.writeFileSync(path.join(HERE, "reel-cover.jpg"), Buffer.from(cover.split(",")[1], "base64"));
+  console.log("✓ drafts/mid-autumn/reel-cover.jpg");
 }
 
 if (!SHEET_ONLY) {
