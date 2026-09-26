@@ -6388,8 +6388,13 @@ html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
 .pv-tabs { display: flex; gap: .55rem; overflow-x: auto; padding: .1rem .1rem .6rem; scrollbar-width: none; }
 .pv-tabs::-webkit-scrollbar { display: none; }
 .pv-tab {
-  flex: 0 0 auto; font: inherit; font-size: .82rem; line-height: 1.6;
-  padding: .25rem .8rem; border-radius: 12px; cursor: pointer;
+  flex: 0 0 auto; font: inherit; line-height: 1.6;
+  /* ⚠ 字級與上下內距要抄站上那一排的**最後一條**（index.html 的
+     .chips :is(button,a) 的 font-size .90rem 與 padding-block calc(…)），
+     不是前面那條 .82rem／.25rem —— 後面那一條把兩個都蓋掉了。
+     只抄前面那條的話，量出來字小 1.28px、塊矮 0.96px（畫面上就是「小一號」）。 */
+  font-size: .90rem; padding: calc((34px - 1.6em - 2px) / 2) .8rem;
+  border-radius: 12px; cursor: pointer;
   -webkit-appearance: none; appearance: none; white-space: nowrap;
   background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
   transition: background-color var(--pv-tabt, .45s) ease, color var(--pv-tabt, .45s) ease, border-color var(--pv-tabt, .45s) ease;
@@ -6427,6 +6432,16 @@ html.pv-js .pv-group.pv-on { display: block; }
   text-align: center; text-decoration: none; font-size: .86rem; line-height: 1.7;
   border-radius: 12px; border: 1px dashed var(--accent-deep); color: var(--accent-deep);
   background: var(--card);
+}
+/* 夜間：沒選到的標籤 ＝ 套色 20% 的淡色塊、字用 --pill-ink。
+   這一條逐字抄站上那排科別標記的夜間規則（index.html 的
+   html[data-theme="dark"] :is(.chips …, .hours-filter …, .card-tag…) 那一段）——
+   不抄的話夜間會停在白天的長相（白底 ＋ 深色框），和上面那一排對不起來。
+   ⚠ 選到的那一顆夜間沒有被覆寫，維持 --accent ＋ --on-fill，和站上一致。 */
+html[data-theme="dark"] .pv-tab[aria-selected="false"] {
+  background: color-mix(in srgb, var(--accent) 20%, var(--card));
+  border-color: color-mix(in srgb, var(--accent) 20%, var(--card));
+  color: var(--pill-ink);
 }
 html[data-pvglide="1"] .pv-rail.cards { scroll-snap-type: none; }
 html[data-pvall="0"] .pv-all { display: none; }
@@ -10418,12 +10433,6 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
     <div class="pv-row"><span class="pv-lab">滑動速度</span><span class="pv-seg" data-k="g">
       <button data-v="g1">極慢 8</button><button data-v="g2">很慢 14</button><button data-v="g3">慢 25</button>
     </span></div>
-    <div class="pv-row"><span class="pv-lab">換科快慢</span><span class="pv-seg" data-k="s">
-      <button data-v="s0">2 秒</button><button data-v="s4">2.5 秒</button><button data-v="s5">2.67 秒</button><button data-v="s6">2.84 秒</button><button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button>
-    </span></div>
-    <div class="pv-row"><span class="pv-lab">標籤換色</span><span class="pv-seg" data-k="x">
-      <button data-v="x2">0.45 秒</button><button data-v="x4">0.6 秒</button><button data-v="x5">0.7 秒</button><button data-v="x3">0.8 秒</button>
-    </span></div>
     <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
       <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
@@ -10444,7 +10453,7 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's2', x: 'x2', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's5', x: 'x4', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -10457,7 +10466,10 @@ html[data-pvbar="0"] body { padding-bottom: 3rem; }
   var hint = document.querySelector('.pv-hint');
   var panel = document.getElementById('pv-panel');
   var idx = 0, stopped = false, timer = null, raf = null, gpos = [];
-  /* ⚠ 滑動速度與換科快慢**拆成兩條尺**（2026-09-26 使用者：滑動要比「慢」再慢、
+  /* ✅ 2026-09-26 使用者定案：**換科 2.67 秒、標籤換色 0.6 秒**。
+     兩條尺收成預設值、從切換條上拿掉（同 head-search 與 night-map-park 那兩輪），
+     網址參數仍然吃得到（?s=s0…、?x=x2…），要回頭比對不必改程式。
+     ⚠ 滑動速度與換科快慢**拆成兩條尺**（2026-09-26 使用者：滑動要比「慢」再慢、
      換科要再快一點）。原本停留時間是從「這一條滑得完」反推的，兩件事綁在一起，
      滑得愈慢就停得愈久 —— 他要的正好是相反的組合。 */
   var V = { g1: 8, g2: 14, g3: 25 };                    /* 橫向滑動，px/s，定速 */
