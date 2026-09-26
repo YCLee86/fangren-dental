@@ -136,7 +136,7 @@ html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
   padding: .25rem .8rem; border-radius: 12px; cursor: pointer;
   -webkit-appearance: none; appearance: none; white-space: nowrap;
   background: var(--card); color: var(--accent-deep); border: 1px solid var(--accent-deep);
-  transition: background-color .15s ease, color .15s ease;
+  transition: background-color var(--pv-tabt, .45s) ease, color var(--pv-tabt, .45s) ease, border-color var(--pv-tabt, .45s) ease;
 }
 .pv-tab[aria-selected="true"] { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
 .pv-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -216,7 +216,9 @@ html[data-pvcur="1"] .pv-orig { display: grid; }
 }
 .pv-seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .pv-more { margin-left: auto; font-size: .72rem; color: var(--ink-soft); background: none; border: 0; cursor: pointer; text-decoration: underline; }
+.pv-fine { max-height: 30vh; overflow-y: auto; }
 .pv-fine[hidden] { display: none; }
+.pv-note { margin: .2rem 0 .35rem; font-size: .7rem; color: var(--ink-soft); line-height: 1.6; }
 .pv-panel { margin-top: .35rem; padding-top: .35rem; border-top: 1px dashed var(--rule); font-size: .72rem; color: var(--ink-soft); line-height: 1.75; }
 .pv-panel b { color: var(--ink); font-weight: 500; }
 .pv-fold { position: absolute; right: .55rem; top: .3rem; font: inherit; font-size: .8rem;
@@ -245,11 +247,21 @@ const bar = `
   </span>
   <button class="pv-more" id="pv-more" type="button">細調</button></div>
   <div class="pv-fine" id="pv-fine" hidden>
+    <p class="pv-note">⚠ 這一頁的自動播放刻意不跟系統的「減少動態效果」—— 跟了就什麼都看不到。</p>
     <div class="pv-row"><span class="pv-lab">按標籤</span><span class="pv-seg" data-k="t">
       <button data-v="here">就地切換</button><button data-v="here2">就地＋末張看全部</button><button data-v="land">跳著陸頁</button>
     </span></div>
-    <div class="pv-row"><span class="pv-lab">速度</span><span class="pv-seg" data-k="s">
-      <button data-v="slow">慢</button><button data-v="mid">中</button><button data-v="fast">快</button>
+    <div class="pv-row"><span class="pv-lab">滑動速度</span><span class="pv-seg" data-k="g">
+      <button data-v="g1">極慢 8</button><button data-v="g2">很慢 14</button><button data-v="g3">慢 25</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">換科快慢</span><span class="pv-seg" data-k="s">
+      <button data-v="s1">3 秒</button><button data-v="s2">4.5 秒</button><button data-v="s3">7 秒</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">標籤換色</span><span class="pv-seg" data-k="x">
+      <button data-v="x1">0.25 秒</button><button data-v="x2">0.45 秒</button><button data-v="x3">0.8 秒</button>
+    </span></div>
+    <div class="pv-row"><span class="pv-lab">換科時</span><span class="pv-seg" data-k="p">
+      <button data-v="keep">橫幅停在原處</button><button data-v="reset">回到最前面</button>
     </span></div>
     <div class="pv-row"><span class="pv-lab">一屏幾張</span><span class="pv-seg" data-k="w">
       <button data-v="115">1.15</button><button data-v="135">1.35</button><button data-v="160">1.6</button>
@@ -268,7 +280,7 @@ const bar = `
 <script>
 (function () {
   var D = document.documentElement;
-  var DEF = { a: 'both', t: 'here2', n: '2', s: 'mid', w: '135', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here2', n: '2', g: 'g2', s: 's2', x: 'x2', p: 'keep', w: '135', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -280,10 +292,13 @@ const bar = `
   var groups = [].slice.call(document.querySelectorAll('.pv-group'));
   var hint = document.querySelector('.pv-hint');
   var panel = document.getElementById('pv-panel');
-  var idx = 0, stopped = false, timer = null, raf = null;
-  var SPEED = { slow: 9000, mid: 6000, fast: 3500 };    /* 一科至少停多久 */
-  var MAXD  = { slow: 45000, mid: 30000, fast: 18000 }; /* 一科最多停多久 */
-  var V     = { slow: 25, mid: 55, fast: 95 };          /* 滑動速度，px/s，定速 */
+  var idx = 0, stopped = false, timer = null, raf = null, gpos = [];
+  /* ⚠ 滑動速度與換科快慢**拆成兩條尺**（2026-09-26 使用者：滑動要比「慢」再慢、
+     換科要再快一點）。原本停留時間是從「這一條滑得完」反推的，兩件事綁在一起，
+     滑得愈慢就停得愈久 —— 他要的正好是相反的組合。 */
+  var V = { g1: 8, g2: 14, g3: 25 };                    /* 橫向滑動，px/s，定速 */
+  var SPEED = { s1: 3000, s2: 4500, s3: 7000 };         /* 一科停多久就換 */
+  var XT = { x1: '.25s', x2: '.45s', x3: '.8s' };       /* 標籤換色的時間 */
 
   D.classList.add('pv-js');
 
@@ -309,23 +324,22 @@ const bar = `
      讓它在換到下一科之前剛好滑完；三段速度各有自己的上限，再快就頭暈。 */
   /* 這一科要停多久：滑得完就照滑完的時間（再加 1.2 秒讓人看清最後一張），
      但不少於「至少停多久」、不多於「最多停多久」。二十篇那一條因此會停久一點。 */
-  function dwell() {
-    if (st.a !== 'both') return SPEED[st.s];
-    var r = railOf(idx), max = r ? r.scrollWidth - r.clientWidth : 0;
-    if (max < 3) return SPEED[st.s];
-    return Math.max(SPEED[st.s], Math.min(MAXD[st.s], (max / V[st.s]) * 1000 + 1200));
-  }
+  function dwell() { return SPEED[st.s]; }
   function glide() {
     if (st.a !== 'both' || stopped) return;
     D.setAttribute('data-pvglide', '1');
-    var last = performance.now(), gi = idx, pos = 0;
+    var last = performance.now();
     function step(now) {
       if (stopped || st.a !== 'both') { raf = null; D.removeAttribute('data-pvglide'); return; }
       var r = railOf(idx), dt = Math.min(0.05, (now - last) / 1000); last = now;
-      if (gi !== idx) { gi = idx; pos = 0; }
       if (r) {
         var max = r.scrollWidth - r.clientWidth;
-        if (max > 2) { pos = Math.min(max, pos + V[st.s] * dt); r.scrollLeft = pos; }
+        if (max > 2) {
+          /* 位置記在各科自己身上：滑得慢又換得快的話，如果每次回來都歸零，
+             二十篇那一條永遠只看得到最前面兩三張。滑到底就停著，不要跳回去。 */
+          var cur = Math.min(max, (gpos[idx] || 0) + V[st.g] * dt);
+          gpos[idx] = cur; r.scrollLeft = cur;
+        }
       }
       raf = requestAnimationFrame(step);
     }
@@ -337,7 +351,7 @@ const bar = `
     (function next() {
       timer = setTimeout(function () {
         if (stopped) return;
-        var r = railOf(idx); if (r) r.scrollLeft = 0;
+        if (st.p === 'reset') { var r = railOf(idx); if (r) r.scrollLeft = 0; gpos[idx] = 0; }
         show(idx + 1);
         measure('auto');
         next();
@@ -388,6 +402,7 @@ const bar = `
     D.setAttribute('data-pvcur', st.cur);
     D.setAttribute('data-pvall', st.t === 'here2' ? '1' : '0');
     D.setAttribute('data-pvd', st.d);
+    D.style.setProperty('--pv-tabt', XT[st.x]);
     D.style.setProperty('--pv-cw', (100 / (parseInt(st.w, 10) / 100) - 4).toFixed(1) + '%');
     url();
   }
@@ -452,11 +467,12 @@ const bar = `
     }
     panel.innerHTML =
       '整頁 <b>' + (total / H).toFixed(1) + ' 屏</b>（現況 ' + base.s + '）・醫師介紹在第 <b>'
-      + (dy / H).toFixed(1) + ' 屏</b>（現況 ' + base.d + '，以 ' + base.w + ' 寬為準）<br>'
+      + (dy / H).toFixed(1) + ' 屏</b>（現況 ' + base.d + '，基準 ' + base.w + '）<br>'
       + '這一科 <b>' + (tabs[idx] ? tabs[idx].textContent.replace(/\\d+$/, '') : '') + '</b>'
       + '・一屏看到 <b>' + seen.toFixed(2) + ' 張</b>・還能滑 <b>' + Math.round(left) + 'px</b>'
       + '・自動播放 <b>' + (stopped ? '已停' : (st.a === 'off' ? '關' : '進行中')) + '</b>'
-      + '<br>⚠ 自動播放刻意不跟系統的「減少動態效果」。';
+      + ' ' + V[st.g] + 'px/秒・' + (SPEED[st.s] / 1000) + ' 秒換科・換色 ' + XT[st.x]
+;
   }
 
   show(0); paint(); startAuto();
