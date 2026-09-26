@@ -199,6 +199,36 @@ eq(PS.one(S.cmp).tokens, ["post:missing-tooth", "home", "!map"], "站內按鈕�
   eq(g.find((ev) => ev[0].sid === "s7").length, 2, "跨過午夜的那一步也收進來");
 }
 
+console.log("\n【三之二】讀到哪裡（寫入 ＋ 歸納）");
+{
+  const n0 = () => env.PATHS.raw.prepare("SELECT COUNT(*) c FROM path_read").get().c;
+  await post({ sid: A, k: "r", r: 3, s: "post:wisdom-tooth", d: 60, x: 2, y: 7, t: 41 });
+  eq(env.PATHS.raw.prepare("SELECT sid, ref, scope, depth, sec, total, secs FROM path_read").all()
+       .map((r) => [r.sid, r.ref, r.scope, r.depth, r.sec, r.total, r.secs]),
+     [[A, 3, "post:wisdom-tooth", 60, 2, 7, 41]], "一筆正常的收下了");
+  const c = n0();
+  for (const bad of [{ d: 55 }, { d: 110 }, { x: 8 }, { t: 99999 }, { r: 0 }, { y: 61, x: 0 }, { s: "admin" }, { sid: "BAD" }]) {
+    await post({ sid: A, k: "r", r: 3, s: "post:wisdom-tooth", d: 60, x: 2, y: 7, t: 41, ...bad });
+  }
+  eq(n0(), c, "滑到幾成不是 10 的倍數、節數超過總數、秒數離譜、頁面不合法——都不收");
+  eq(rows().length, before, "讀到哪裡不是一步（path_log 沒有多一筆）");
+
+  const reads = [
+    { sid: "s1", ref: 1, scope: "post:missing-tooth", depth: 40, sec: 2, total: 7, secs: 20 },
+    { sid: "s1", ref: 1, scope: "post:missing-tooth", depth: 100, sec: 7, total: 7, secs: 95 },   /* 切回來又讀完 */
+    { sid: "s2", ref: 1, scope: "post:missing-tooth", depth: 30, sec: 1, total: 7, secs: 8 },
+    { sid: "s4", ref: 1, scope: "post:gum-bleeding", depth: 90, sec: 5, total: 6, secs: 400 },
+    { sid: "nobody", ref: 1, scope: "home", depth: 100, sec: 3, total: 3, secs: 5 },               /* 不是這一天的來訪 */
+  ];
+  const sum = PS.summarize(Object.values(S), reads);
+  const m = sum.read["post:missing-tooth"];
+  eq([m.n, m.depth, m.done, m.doneConv], [2, 130, 1, 1], "同一頁取最大值：缺牙那篇看了 2 次、滑到的加總 130、讀完 1 次（那一次有打電話）");
+  eq(m.reach, { 1: 2, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1 }, "每一節有幾次讀到");
+  eq(sum.read["post:gum-bleeding"].done, 1, "滑到九成算讀完");
+  eq(sum.read.home, undefined, "不屬於這一天的來訪不算");
+  eq(PS.merge([sum, sum]).read["post:missing-tooth"].reach["1"], 4, "合併兩天逐格相加");
+}
+
 /* =============================== 瀏覽器那一側 =============================== */
 const chromeCandidates = () => {
   const out = [];
@@ -317,6 +347,39 @@ eq(logged().slice(-1)[0].scope, "topic:ortho", "著陸頁也記得到（沒過�
 }
 eq(errs, [], "沒有 JS 錯誤");
 
+console.log("\n【四之二】真的讀一篇（讀到哪裡）");
+{
+  const reads = () => web.PATHS.raw.prepare("SELECT sid, ref, scope, depth, sec, total, secs FROM path_read ORDER BY id").all();
+  const c0 = reads().length;
+  await page.goto(base + "/posts/missing-tooth/", { waitUntil: "load" });
+  await settle();
+  const me = logged().filter((r) => r.kind === "view").slice(-1)[0];
+  const heads = await page.evaluate(() => Array.from(document.querySelectorAll("main h2")).filter((h) => h.getClientRects().length).length);
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(1200);
+  await page.goto(base + "/", { waitUntil: "load" });                    /* 離開那一頁 → 送出 */
+  await settle();
+  const r = reads().slice(c0).filter((x) => x.scope === "post:missing-tooth").pop();
+  eq(!!r, true, "離開那一頁時送出了一筆");
+  eq([r && r.sid, r && r.ref], [me.sid, me.n], "掛在那一頁的那一步上（同一個代碼、ref ＝ 那一頁的 n）");
+  eq([r && r.depth, r && r.sec, r && r.total], [100, heads, heads], `滑到底：100%、讀到第 ${heads} 節（共 ${heads} 節）`);
+  eq(r && r.secs >= 1 && r.secs < 30, true, "停留秒數有算到：" + (r && r.secs));
+
+  const c1 = reads().length;
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.goto(base + "/posts/gum-bleeding/", { waitUntil: "load" });
+  await settle();
+  await page.reload({ waitUntil: "load" });
+  await settle();
+  await page.goto(base + "/", { waitUntil: "load" });
+  await settle();
+  const g = reads().slice(c1).filter((x) => x.scope === "post:gum-bleeding");
+  const gv = logged().filter((x) => x.kind === "view" && x.scope === "post:gum-bleeding").pop();
+  eq(g.length >= 1 && g.every((x) => x.ref === gv.n), true, "重新整理之後讀到哪裡仍然掛回同一步（沒有多一步）");
+  eq(g.every((x) => x.depth < 100), true, "沒往下滑的那一頁不會被記成讀完");
+}
+eq(errs, [], "讀到哪裡：沒有 JS 錯誤");
+
 console.log("\n【五】報告頁「訪客軌跡」那一份");
 {
   /* 塞三天的資料：前天、昨天（算定了）、今天（沒算定）。 */
@@ -336,6 +399,13 @@ console.log("\n【五】報告頁「訪客軌跡」那一份");
   }
   put(0, 0, [["view", "post:missing-tooth"], ["view", "home"], ["click", "home", "map:clinic"]]);
   const total = 7;
+  web.PATHS.raw.exec("DELETE FROM path_read");
+  {
+    const insR = web.PATHS.raw.prepare("INSERT INTO path_read (sid, ref, scope, depth, sec, total, secs, at) VALUES (?,?,?,?,?,?,?,?)");
+    for (const r of web.PATHS.raw.prepare("SELECT sid, n, scope, at FROM path_log WHERE kind='view' AND scope='post:missing-tooth'").all()) {
+      insR.run(r.sid, r.n, r.scope, 100, 7, 7, 70, r.at);
+    }
+  }
   await page.goto(base + "/admin/search/", { waitUntil: "load" });
   await page.fill("#key", KEY);
   await page.click("button.go");
@@ -355,6 +425,12 @@ console.log("\n【五】報告頁「訪客軌跡」那一份");
   eq((await page.textContent("#p-t-path")).includes("打電話"), true, "路徑表看得到「打電話」");
   eq((await page.textContent("#p-t-type")).includes("直接行動"), true, "訪客類型表");
   eq((await page.$$("#p-t-recent tbody tr")).length, total, "最近幾次來訪逐筆列出");
+  eq(await page.textContent('#p-t-read details[data-sc="post:missing-tooth"] summary .rdm'),
+     "平均滑到 100%・讀完 100%・停留中位數 1–2 分・讀完的那幾次有行動 100%", "讀到哪裡：缺牙那篇 3 次都讀完");
+  await page.click('#p-t-read details[data-sc="post:missing-tooth"] summary');
+  await page.waitForSelector('#p-t-read details[data-sc="post:missing-tooth"] .bar-row');
+  eq((await page.textContent('#p-t-read details[data-sc="post:missing-tooth"] .rdb')).includes("1. 不處理會發生什麼"), true,
+     "點開看得到每一節的名字（從那一頁抓回來的 <h2>）");
 
   rowCalls = 0;
   await page.click('#wins button:text-is("一週")');
@@ -377,6 +453,9 @@ console.log("\n【五】報告頁「訪客軌跡」那一份");
       await p2.click('#tabs button:text-is("訪客軌跡")');
       await p2.waitForFunction(() => document.getElementById("p-all").textContent !== "—");
       await p2.screenshot({ path: `/tmp/path-report-${scheme}.png`, fullPage: true });
+      await p2.click('#p-t-read details summary');
+      await p2.waitForSelector('#p-t-read .bar-row');
+      await (await p2.$("#p-t-read")).screenshot({ path: `/tmp/path-read-${scheme}.png` });
       await c2.close();
       console.log(`  · 截圖 /tmp/path-report-${scheme}.png`);
     }

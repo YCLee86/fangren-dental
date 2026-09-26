@@ -18,9 +18,17 @@
      info     資訊型：  只看了一篇文章或一科就走
      browse   瀏覽型：  其他（看了幾頁、沒有行動）
    ⚠ 規則改了要把 V 加一（src/paths.js 的 V 一起改），舊的那幾天才會重算。
+
+   ── 讀到哪裡（V 2，2026-09-26）─────────────────────────────────────────────
+   每一頁（sid ＋ ref）可能有好幾筆，取最大值。按頁面分開記：看了幾次、平均滑到幾成、
+   讀完幾次（滑到九成以上，或讀到最後一節）、每一節有幾次讀到、停留秒數分成幾格，
+   以及「讀完的那幾次，那一次來訪最後有沒有行動」。
    ========================================================================== */
 (function (root) {
-  var V = 1, MAXP = 6, TOP_PATHS = 300, TOP_TRANS = 1500;
+  var V = 2, MAXP = 6, TOP_PATHS = 300, TOP_TRANS = 1500;
+  /* 停留秒數的格子（上界）。最後一格是「10 分鐘以上」。 */
+  var SECS = [10, 30, 60, 120, 300, 600];
+  function secBin(t) { for (var i = 0; i < SECS.length; i++) if (t < SECS[i]) return String(i); return String(SECS.length); }
   var OUT = /^(tel$|line$|map:|park:|fb:)/;
 
   function act(code) {
@@ -74,13 +82,45 @@
 
   function steps(v) { return v <= 1 ? '1' : v === 2 ? '2' : v === 3 ? '3' : v <= 5 ? '4-5' : '6+'; }
 
+  function blank() {
+    return { v: V, sessions: 0, converted: 0, views: 0, types: {}, typesConv: {}, paths: {},
+             entries: {}, entriesConv: {}, exits: {}, trans: {}, src: {}, srcConv: {}, acts: {}, steps: {}, read: {} };
+  }
+  /* 讀到哪裡：reads 是 path_read 的原始逐筆；只收 conv 裡有的那幾次來訪（同一天的）。 */
+  function addReads(s, reads, conv) {
+    var best = {};
+    for (var i = 0; i < (reads || []).length; i++) {
+      var r = reads[i];
+      if (!(r.sid in conv)) continue;
+      var k = r.sid + '#' + r.ref, b = best[k];
+      if (!b) best[k] = { sid: r.sid, scope: r.scope, depth: r.depth, sec: r.sec, total: r.total, secs: r.secs };
+      else {
+        if (r.depth > b.depth) b.depth = r.depth;
+        if (r.sec > b.sec) b.sec = r.sec;
+        if (r.total > b.total) b.total = r.total;
+        if (r.secs > b.secs) b.secs = r.secs;
+      }
+    }
+    for (var key in best) {
+      var x = best[key];
+      var g = s.read[x.scope] || (s.read[x.scope] = { n: 0, depth: 0, done: 0, doneConv: 0, reach: {}, totals: {}, secs: {}, depths: {} });
+      var done = x.depth >= 90 || (x.total > 0 && x.sec >= x.total);
+      g.n++; g.depth += x.depth;
+      if (done) { g.done++; if (conv[x.sid]) g.doneConv++; }
+      for (var j = 1; j <= x.sec; j++) bump(g.reach, String(j));
+      bump(g.totals, String(x.total));
+      bump(g.secs, secBin(x.secs));
+      bump(g.depths, String(x.depth));
+    }
+  }
+
   /* 很多次來訪 → 一份摘要（全部是可以相加的次數，合併幾天就是逐格相加） */
-  function summarize(sessions) {
-    var s = { v: V, sessions: 0, converted: 0, views: 0, types: {}, typesConv: {}, paths: {},
-              entries: {}, entriesConv: {}, exits: {}, trans: {}, src: {}, srcConv: {}, acts: {}, steps: {} };
+  function summarize(sessions, reads) {
+    var s = blank(), conv = {};
     for (var i = 0; i < sessions.length; i++) {
       var f = one(sessions[i]);
       if (!f) continue;
+      conv[sessions[i][0].sid] = f.converted;
       s.sessions++; s.views += f.views;
       if (f.converted) s.converted++;
       bump(s.types, f.type);
@@ -100,6 +140,7 @@
     }
     s.paths = top(s.paths, TOP_PATHS);
     s.trans = top(s.trans, TOP_TRANS);
+    addReads(s, reads, conv);
     return s;
   }
 
@@ -135,19 +176,24 @@
   }
 
   function merge(list) {
-    var s = { v: V, sessions: 0, converted: 0, views: 0, types: {}, typesConv: {}, paths: {},
-              entries: {}, entriesConv: {}, exits: {}, trans: {}, src: {}, srcConv: {}, acts: {}, steps: {} };
+    var s = blank();
     for (var i = 0; i < list.length; i++) {
       var d = list[i];
       if (!d) continue;
       s.sessions += d.sessions || 0; s.converted += d.converted || 0; s.views += d.views || 0;
       for (var k in s) {
-        if (typeof s[k] !== 'object' || !d[k]) continue;
+        if (k === 'read' || typeof s[k] !== 'object' || !d[k]) continue;
         for (var x in d[k]) bump(s[k], x, d[k][x]);
+      }
+      /* 讀到哪裡多一層（頁面 → 那幾格），逐格相加 */
+      for (var sc in (d.read || {})) {
+        var a = d.read[sc], g = s.read[sc] || (s.read[sc] = { n: 0, depth: 0, done: 0, doneConv: 0, reach: {}, totals: {}, secs: {}, depths: {} });
+        g.n += a.n || 0; g.depth += a.depth || 0; g.done += a.done || 0; g.doneConv += a.doneConv || 0;
+        ['reach', 'totals', 'secs', 'depths'].forEach(function (f) { for (var y in (a[f] || {})) bump(g[f], y, a[f][y]); });
       }
     }
     return s;
   }
 
-  root.fangrenPathSummary = { V: V, OUT: OUT, one: one, summarize: summarize, group: group, merge: merge };
+  root.fangrenPathSummary = { V: V, OUT: OUT, SECS: SECS, one: one, summarize: summarize, group: group, merge: merge };
 })(typeof window !== 'undefined' ? window : this);

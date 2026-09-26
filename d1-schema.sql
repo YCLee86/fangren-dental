@@ -130,6 +130,15 @@ CREATE TABLE IF NOT EXISTS source_quota (
 -- );
 -- CREATE INDEX idx_path_at  ON path_log (at);
 -- CREATE INDEX idx_path_sid ON path_log (sid, n);
+-- CREATE TABLE IF NOT EXISTS path_read (   -- 每一頁讀到哪裡（離開那一頁時送），不是一步
+--   id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT NOT NULL,
+--   ref   INTEGER NOT NULL,   -- 那一頁在 path_log 的 n
+--   scope TEXT NOT NULL, depth INTEGER NOT NULL,   -- 滑到幾成（0~100，10 的倍數）
+--   sec   INTEGER NOT NULL,   -- 讀到第幾節（<main> 的 <h2>）
+--   total INTEGER NOT NULL,   -- 共幾節
+--   secs  INTEGER NOT NULL,   -- 畫面在前面的秒數
+--   at TEXT NOT NULL);
+-- CREATE INDEX idx_read_at ON path_read (at);
 -- CREATE TABLE path_quota (day TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0);
 -- CREATE TABLE path_day (day TEXT PRIMARY KEY, v INTEGER NOT NULL, data TEXT NOT NULL, at TEXT NOT NULL);
 --   ↑ 每一天（台灣時間）的摘要，由報告頁算好存回來，見 assets/path-summary.js

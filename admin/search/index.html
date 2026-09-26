@@ -157,6 +157,17 @@ button:disabled { opacity: .5; cursor: default; }
 .seq .st { display: inline-block; padding: 0 .35rem; border: 1px solid var(--rule); border-radius: 6px; font-size: .78rem; white-space: nowrap; }
 .seq .st.act { color: var(--hit); border-color: var(--hit); font-weight: 600; }
 .seq .st.in { border-style: dashed; color: var(--ink-soft); }
+details.rd { border-top: 1px solid var(--rule); }
+details.rd summary { cursor: pointer; padding: .45rem .55rem; font-size: .85rem; list-style: none; }
+details.rd summary::-webkit-details-marker { display: none; }
+details.rd .rdm { color: var(--ink-soft); font-size: .75rem; display: block; margin-top: .1rem; }
+.bar-row { display: grid; grid-template-columns: 1fr 3.2rem; gap: .4rem; align-items: center; padding: .15rem .55rem; font-size: .78rem; }
+.bar-row .bl { position: relative; padding: .1rem .35rem; border-radius: 4px; overflow: hidden; }
+.bar-row .bl i { position: absolute; inset: 0 auto 0 0; background: var(--hit); opacity: .18; }
+.bar-row .bl span { position: relative; }
+.bar-row b { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.rdbox { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.rdbox details.rd:first-child { border-top: 0; }
 .seq i { font-style: normal; color: var(--ink-soft); font-size: .7rem; margin: 0 .15rem; }
 td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
 .exp select { font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: .3rem .4rem; }
@@ -274,6 +285,10 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
 
       <h2>最後停在哪一頁<small>離開網站之前看的最後一頁</small></h2>
       <div id="p-t-exit"></div>
+
+      <!-- 讀到哪裡（2026-09-26）。資料是 path_read，歸納在 path-summary.js 的 addReads。 -->
+      <h2>每一頁讀到哪裡<small>點頁名看每一節有幾成讀到</small></h2>
+      <div id="p-t-read"></div>
 
       <h2>最近 30 次來訪<small>逐步；虛線框是站內的按鈕，綠框是離站動作</small></h2>
       <div id="p-t-recent"></div>
@@ -842,10 +857,11 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
   function isoOf(ms) { return new Date(ms).toISOString().replace(/\.\d+Z$/, 'Z'); }
   function addDays(d, k) { var t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); }
   function pathMsg(t) { $('p-msg').textContent = t; }
-  function rowsBetween(fromMs, toMs) {
+  function rowsBetween(fromMs, toMs, op) {
     var out = [];
+    op = op || 'rows';
     function next(after) {
-      return req(PAPI + '?op=rows&from=' + isoOf(fromMs) + '&to=' + isoOf(toMs) + '&after=' + after).then(function (j) {
+      return req(PAPI + '?op=' + op + '&from=' + isoOf(fromMs) + '&to=' + isoOf(toMs) + '&after=' + after).then(function (j) {
         out = out.concat(j.rows || []);
         pathMsg('讀取原始紀錄中…已拿到 ' + out.length + ' 筆');
         return j.next != null ? next(j.next) : out;
@@ -879,11 +895,11 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
       chunks.forEach(function (c) {
         p = p.then(function () {
           var a = dStart(c[0]), b = Math.min(dStart(addDays(c[c.length - 1], 1)) + settle, now + 60000);
-          return rowsBetween(a, b).then(function (rows) {
-            var saves = [];
+          return Promise.all([rowsBetween(a, b), rowsBetween(a, b, 'reads')]).then(function (rr) {
+            var rows = rr[0], reads = rr[1], saves = [];
             c.forEach(function (day) {
               var s0 = dStart(day), s1 = dStart(addDays(day, 1));
-              var sum = PS.summarize(PS.group(rows, isoOf(s0), isoOf(s1)));
+              var sum = PS.summarize(PS.group(rows, isoOf(s0), isoOf(s1)), reads);
               sums.push(sum);
               if (s1 + settle <= now) {
                 saves.push(req(PAPI + '?op=day', { method: 'POST',
@@ -939,11 +955,76 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
     });
     box.innerHTML = h + '</tbody></table>';
   }
+  /* ---- 讀到哪裡 ------------------------------------------------------------
+     每一頁一列（點開看每一節）。節的名字是去把那一頁抓回來讀 <main> 的 <h2>——
+     不另外存一份，文章改了標題這裡跟著對。抓不到就寫「第 N 節」。 */
+  var SECN = ['10 秒內', '10–30 秒', '30 秒–1 分', '1–2 分', '2–5 分', '5–10 分', '10 分以上'];
+  var HEADS = {};
+  function pageUrl(sc) {
+    if (sc === 'home') return '../../';
+    var m = /^(topic|post):(.+)$/.exec(sc);
+    return m ? '../../' + (m[1] === 'topic' ? 'topics/' : 'posts/') + m[2] + '/' : null;
+  }
+  function headsOf(sc) {
+    if (HEADS[sc]) return HEADS[sc];
+    var u = pageUrl(sc);
+    HEADS[sc] = !u ? Promise.resolve([]) : fetch(u).then(function (r) { return r.text(); }).then(function (t) {
+      var doc = new DOMParser().parseFromString(t, 'text/html');
+      return Array.prototype.map.call(doc.querySelectorAll('main h2'), function (h) { return h.textContent.replace(/\s+/g, ' ').trim(); });
+    }).catch(function () { return []; });
+    return HEADS[sc];
+  }
+  function medianBin(m, n) {
+    var acc = 0;
+    for (var i = 0; i <= 6; i++) { acc += m[String(i)] || 0; if (acc * 2 >= n) return SECN[i]; }
+    return '—';
+  }
+  function renderRead(read) {
+    var keys = Object.keys(read).sort(function (a, b) { return read[b].n - read[a].n; }).slice(0, 30);
+    var box = $('p-t-read');
+    if (!keys.length) { box.innerHTML = '<p class="empty">這段期間還沒有「讀到哪裡」的資料（2026-09-26 起才開始記）。</p>'; return; }
+    var h = '<div class="rdbox">';
+    keys.forEach(function (k) {
+      var g = read[k];
+      h += '<details class="rd" data-sc="' + esc(k) + '"><summary><span class="seq">' + stepHtml(k) + '</span> ' +
+           '<b>' + g.n + '</b> 次<span class="rdm">平均滑到 ' + Math.round(g.depth / g.n) + '%・讀完 ' + pct(g.done, g.n) +
+           '・停留中位數 ' + medianBin(g.secs, g.n) + '・讀完的那幾次有行動 ' + pct(g.doneConv, g.done) + '</span></summary>' +
+           '<div class="rdb"></div></details>';
+    });
+    box.innerHTML = h + '</div>';
+    Array.prototype.forEach.call(box.querySelectorAll('details.rd'), function (el) {
+      el.addEventListener('toggle', function () {
+        if (!el.open || el.getAttribute('data-done')) return;
+        el.setAttribute('data-done', '1');
+        var sc = el.getAttribute('data-sc'), g = read[sc];
+        var total = 0;
+        Object.keys(g.totals).forEach(function (t) { if (+t > total) total = +t; });
+        headsOf(sc).then(function (names) {
+          var rows = '';
+          for (var i = 1; i <= total; i++) {
+            var p = Math.round((g.reach[String(i)] || 0) / g.n * 100);
+            rows += '<div class="bar-row"><span class="bl"><i style="width:' + p + '%"></i><span>' + i + '. ' +
+                    esc(names[i - 1] || ('第 ' + i + ' 節')) + '</span></span><b>' + p + '%</b></div>';
+          }
+          var dp = '';
+          for (var d = 10; d <= 100; d += 10) {
+            var c = 0;
+            Object.keys(g.depths).forEach(function (x) { if (+x >= d) c += g.depths[x]; });
+            if (d % 20 === 0 || d === 10) dp += '<div class="bar-row"><span class="bl"><i style="width:' + Math.round(c / g.n * 100) +
+              '%"></i><span>' + (d === 100 ? '滑到底' : '滑到 ' + d + '% 以上') + '</span></span><b>' + Math.round(c / g.n * 100) + '%</b></div>';
+          }
+          el.querySelector('.rdb').innerHTML = (rows ? '<p class="note" style="margin:.3rem .55rem">每一節有幾成讀到</p>' + rows : '') +
+            '<p class="note" style="margin:.5rem .55rem .2rem">滑到哪裡</p>' + dp + '<div style="height:.4rem"></div>';
+        });
+      });
+    });
+  }
+
   function renderPath(d) {
     if (d.off) {
       pathMsg('');
       $('p-t-type').innerHTML = '<p class="empty">訪客軌跡的資料庫還沒有接上（Cloudflare 那一個 D1 還沒綁到網站）。接上之後這裡就會開始有資料。</p>';
-      ['p-t-path', 'p-t-entry', 'p-t-next', 'p-t-src', 'p-t-exit', 'p-t-recent'].forEach(function (id) { $(id).innerHTML = ''; });
+      ['p-t-path', 'p-t-entry', 'p-t-next', 'p-t-src', 'p-t-exit', 'p-t-read', 'p-t-recent'].forEach(function (id) { $(id).innerHTML = ''; });
       $('p-all').textContent = $('p-avg').textContent = $('p-conv').textContent = '—';
       $('span').textContent = '';
       return;
@@ -985,6 +1066,8 @@ td.p { color: var(--ink-soft); font-size: .75rem; white-space: nowrap; text-alig
       });
       $('p-t-next').innerHTML = h + '</tbody></table>';
     }
+
+    renderRead(s.read || {});
 
     /* 最近 30 次：逐步全列，站內的按鈕也列（虛線框），才看得出他在那一頁做了什麼 */
     var by = {}, order = [];

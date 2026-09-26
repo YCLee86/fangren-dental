@@ -397,7 +397,7 @@ assets/
   source-log.js         **來源紀錄**的前端那一側（2026-09-25）。開頁時送一筆（重新整理、
                         上一頁、站內換頁都不送），**並把網址列上的 ?from= 擦掉**。
                         三種頁面都載，改完 index.html 要重跑 topics.mjs
-  path-log.js           **訪客軌跡**的前端那一側（2026-09-26）。每開一頁、每按一顆送一步；
+  path-log.js           **訪客軌跡**的前端那一側（2026-09-26）。每開一頁、每按一顆送一步；離開一頁時另送一筆「讀到哪裡」；
                         按鈕的代碼跟 click-log.js 要（接它丟的 fangren:click 事件），不自己推。
                         三種頁面都載，改完 index.html 要重跑 topics.mjs。
                         ⚠ 代碼存 sessionStorage，**不要改成 localStorage**（那就認得出同一個人隔天又來）
@@ -555,7 +555,7 @@ tools/
   store-test.mjs        **資料庫容量與匯出的守門**（2026-09-26）。49 項，做法同 source-test.mjs；
                         含一項 EXPLAIN QUERY PLAN（擋「寫成整張表掃描、數字照樣對」）。
                         ⚠ 改過 src/store.js、admin/search/ 都要跑它
-  path-test.mjs         **訪客軌跡那條線的守門**（2026-09-26）。58 項：寫入的白名單、摘要的歸納、
+  path-test.mjs         **訪客軌跡那條線的守門**（2026-09-26）。75 項（含「讀到哪裡」）：寫入的白名單、摘要的歸納、
                         真的在瀏覽器裡逛一次（同一個代碼、n 不跳號、重新整理不算、上一頁算、閒置換代碼），
                         以及報告頁「算定的日子只讀摘要」。⚠ 改過 src/paths.js、assets/path-*.js、
                         assets/click-log.js、admin/search/ 都要跑它

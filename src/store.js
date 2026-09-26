@@ -43,6 +43,7 @@ export const TABLES = {
   click_log:  { label: "點擊紀錄", cols: ["id", "code", "scope", "at"] },
   source_log: { label: "來源紀錄", cols: ["id", "src", "via", "host", "page", "at"] },
   path_log:   { label: "訪客軌跡", cols: ["id", "sid", "n", "kind", "scope", "code", "src", "back", "at"] },
+  path_read:  { label: "讀到哪裡", cols: ["id", "sid", "ref", "scope", "depth", "sec", "total", "secs", "at"] },
 };
 
 /* 資料庫：binding 是 wrangler.toml 裡的名字。沒有綁的（例如軌跡那一個還沒建）就跳過。 */
@@ -52,7 +53,7 @@ export const DBS = [
   /* 軌跡另開一個（2026-09-26，理由見 src/paths.js 的①）。每日摘要 path_day 不列：
      它是從 path_log 算出來的，匯出原始逐筆就夠了。 */
   { binding: "PATHS", name: "fangren-dental-paths", label: "訪客軌跡",
-    tables: ["path_log"] },
+    tables: ["path_log", "path_read"] },
 ];
 
 const json = (data, status = 200) =>

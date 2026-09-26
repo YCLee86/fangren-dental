@@ -40,7 +40,7 @@ const PAGE = 20000;
 export const SETTLE_H = 3;
 /* 摘要的格式版本。assets/path-summary.js 的 V 要一致；改了格式要加一，
    報告頁看到版本不符的那幾天會重算、蓋掉舊的。 */
-export const V = 1;
+export const V = 2;          /* 2：2026-09-26 加上「讀到哪裡」 */
 
 export const SID = /^[a-z0-9]{12}$/;
 
@@ -58,6 +58,20 @@ const DDL = [
    )`,
   `CREATE INDEX IF NOT EXISTS idx_path_at  ON path_log (at)`,
   `CREATE INDEX IF NOT EXISTS idx_path_sid ON path_log (sid, n)`,
+  /* 每一頁讀到哪裡（2026-09-26）。一頁可能不只一筆（切走又回來會再送，數字只會變大），
+     報告取同一個 (sid, ref) 的最大值。ref ＝ 那一頁在 path_log 裡的 n。 */
+  `CREATE TABLE IF NOT EXISTS path_read (
+     id    INTEGER PRIMARY KEY AUTOINCREMENT,
+     sid   TEXT    NOT NULL,
+     ref   INTEGER NOT NULL,
+     scope TEXT    NOT NULL,
+     depth INTEGER NOT NULL,
+     sec   INTEGER NOT NULL,
+     total INTEGER NOT NULL,
+     secs  INTEGER NOT NULL,
+     at    TEXT    NOT NULL
+   )`,
+  `CREATE INDEX IF NOT EXISTS idx_read_at ON path_read (at)`,
   `CREATE TABLE IF NOT EXISTS path_quota (
      day TEXT PRIMARY KEY,
      n   INTEGER NOT NULL DEFAULT 0
@@ -90,6 +104,7 @@ const DAY = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 /* =============================================================================
    POST /api/path —— 記一步
    body: { sid, n, k: 'v'|'c', s: scope, c?: code, b?: 1, f?: from, h?: host, i?: 1 }
+     或  { sid, k: 'r', r: ref, s: scope, d: 0~100, x: 讀到第幾節, y: 共幾節, t: 秒 }（讀到哪裡，不是一步）
      k 'v' ＝ 看了一頁（b ＝ 上一頁／下一頁回來的）、'c' ＝ 按了一顆
      f／h 只有這次來訪的第一步才帶（同來源紀錄：?from= 的值與 referrer 的網域）；
      i ＝ 閒置超過 30 分鐘後在站內接著逛（換了一組代碼，但不是從站外進來的）
@@ -114,10 +129,30 @@ export async function logPath(request, env) {
   if (!b || typeof b !== "object") return ok();
 
   const sid = String(b.sid || "");
-  const n = Number(b.n);
-  if (!SID.test(sid) || !Number.isInteger(n) || n < 1 || n > MAX_N) return ok();
+  if (!SID.test(sid)) return ok();
   const scope = normScope(b.s);
   if (!scope) return ok();
+
+  if (b.k === "r") {
+    const ref = Number(b.r), d = Number(b.d), x = Number(b.x), y = Number(b.y), t = Number(b.t);
+    const int = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
+    if (!int(ref, 1, MAX_N) || !int(d, 0, 100) || d % 10 || !int(y, 0, 60) || !int(x, 0, y) || !int(t, 0, 7200)) return ok();
+    await ensure(db);
+    const at = nowIso();
+    const quota = await db.prepare(
+      `INSERT INTO path_quota (day, n) VALUES (?, 1)
+         ON CONFLICT (day) DO UPDATE SET n = n + 1
+       RETURNING n`
+    ).bind(at.slice(0, 10)).first();
+    if (quota && quota.n > DAY_CAP) return ok();
+    await db.prepare(
+      `INSERT INTO path_read (sid, ref, scope, depth, sec, total, secs, at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(sid, ref, scope, d, x, y, t, at).run();
+    return ok();
+  }
+
+  const n = Number(b.n);
+  if (!Number.isInteger(n) || n < 1 || n > MAX_N) return ok();
   let kind, code = null, src = null, back = 0;
   if (b.k === "v") {
     kind = "view";
@@ -217,6 +252,22 @@ export async function pathReport(request, url, env) {
     const after = Math.max(0, parseInt(url.searchParams.get("after") || "0", 10) || 0);
     const r = await db.prepare(
       `SELECT id, sid, n, kind, scope, code, src, back, at FROM path_log
+        WHERE at >= ? AND at < ? AND id > ?
+        ORDER BY id LIMIT ?`
+    ).bind(from, to, after, PAGE).all();
+    const rows = r.results || [];
+    return json({ ok: true, rows, next: rows.length === PAGE ? rows[rows.length - 1].id : null });
+  }
+
+  if (op === "reads") {
+    /* 讀到哪裡的原始逐筆，用法同 op=rows。 */
+    const from = url.searchParams.get("from") || "";
+    const to = url.searchParams.get("to") || "";
+    const iso = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/;
+    if (!iso.test(from) || !iso.test(to)) return json({ ok: false, error: "bad range" }, 400);
+    const after = Math.max(0, parseInt(url.searchParams.get("after") || "0", 10) || 0);
+    const r = await db.prepare(
+      `SELECT id, sid, ref, scope, depth, sec, total, secs, at FROM path_read
         WHERE at >= ? AND at < ? AND id > ?
         ORDER BY id LIMIT ?`
     ).bind(from, to, after, PAGE).all();

@@ -20,6 +20,13 @@
       閒置之後在站內接著逛的（referrer 是自己）帶 i:1，報告上算成「閒置後接著逛」，
       不要算成「沒帶來源」。
 
+   ⑤ **每一頁讀到哪裡**（2026-09-26 加的，使用者：「可以記錄使用者在一個頁面裡滑到哪裡嗎」）：
+      離開那一頁（切走、關掉、換頁）時送一筆 k:'r'：讀到第幾節（<main> 裡看得到的 <h2>
+      出現在畫面下緣 85% 以內就算到了）、共幾節、滑到幾成（以 10% 為一格，到底就是 100）、
+      畫面真的在前面的秒數。r ＝ 它屬於這次來訪的第幾步（那一頁的 view）。
+      ⚠ 同一頁切走又回來會再送一筆（數字只會變大），報告取最大的那一筆。
+      ⚠ 不是步——n 不加一，不進路徑。手機直接關掉瀏覽器時可能來不及送，那一頁就沒有這一筆。
+
    ── 不記什麼 ────────────────────────────────────────────────────────────
    不記 IP、不記 User-Agent、不發 cookie。代碼只活在這個分頁裡，
    **認不出同一個人隔天又來**——那是刻意的界線，不要改成 localStorage。
@@ -50,11 +57,12 @@
   function load() {
     try {
       var s = JSON.parse(sessionStorage.getItem(KEY) || 'null');
-      if (s && /^[a-z0-9]{12}$/.test(s.sid) && typeof s.n === 'number' && typeof s.t === 'number') return s;
+      if (s && /^[a-z0-9]{12}$/.test(s.sid) && typeof s.n === 'number' && typeof s.t === 'number') { s.vn = s.vn || 0; return s; }
     } catch (e) {}
     return null;
   }
   function save(s) { try { sessionStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+  var lastVn = 0, R = null;       /* 最近一次 view 是第幾步（重新整理之後讀到哪裡要掛回它） */
   function newSid() {
     var a = 'abcdefghijklmnopqrstuvwxyz0123456789', out = '';
     var buf = new Uint8Array(12);
@@ -83,7 +91,9 @@
     if (sent >= MAX) return;
     s = s || visit();
     s.n++; s.t = Date.now(); sent++;
-    save({ sid: s.sid, n: s.n, t: s.t });
+    if (obj.k === 'v') { lastVn = s.n; startRead(s.sid, s.n); }
+    else if (s.vn) lastVn = s.vn;
+    save({ sid: s.sid, n: s.n, t: s.t, vn: lastVn });
     obj.sid = s.sid; obj.n = s.n;
     beacon(obj);
   }
@@ -115,7 +125,61 @@
   /* 重新整理不是新的一步——除非已經閒置過久（那就是一次新的來訪）。 */
   var cur = load();
   if (type !== 'reload' || !cur || Date.now() - cur.t > IDLE) view(type === 'back_forward');
-  else save({ sid: cur.sid, n: cur.n, t: Date.now() });
+  else {
+    save({ sid: cur.sid, n: cur.n, t: Date.now(), vn: cur.vn || 0 });
+    lastVn = cur.vn || 0;
+    if (cur.vn) startRead(cur.sid, cur.vn);
+  }
+
+  /* ---- ⑤ 讀到哪裡 ---- */
+  function startRead(sid, ref) {
+    flushRead();
+    R = { sid: sid, ref: ref, d: 0, x: 0, y: 0, secs: 0, since: document.visibilityState === 'visible' ? Date.now() : 0,
+          last: '', sent: 0 };
+    measure();
+  }
+  function heads() {
+    var all = document.querySelectorAll('main h2'), out = [];
+    for (var i = 0; i < all.length && out.length < 60; i++) if (all[i].getClientRects().length) out.push(all[i]);
+    return out;
+  }
+  function measure() {
+    if (!R) return;
+    var h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    var bottom = (window.pageYOffset || document.documentElement.scrollTop || 0) + window.innerHeight;
+    var d = bottom >= h - 2 ? 100 : Math.max(0, Math.min(100, Math.floor(bottom / h * 10) * 10));
+    if (d > R.d) R.d = d;
+    var hs = heads();
+    R.y = hs.length;
+    for (var i = R.x; i < hs.length; i++) {
+      if (hs[i].getBoundingClientRect().top < window.innerHeight * 0.85) R.x = i + 1; else break;
+    }
+  }
+  function flushRead() {
+    if (!R || R.sent >= 30) return;
+    measure();
+    var secs = R.secs + (R.since ? (Date.now() - R.since) / 1000 : 0);
+    var t = Math.min(7200, Math.round(secs));
+    var key = R.d + '|' + R.x + '|' + R.y + '|' + Math.floor(t / 5);
+    if (key === R.last) return;
+    R.last = key; R.sent++;
+    beacon({ k: 'r', sid: R.sid, r: R.ref, s: scope, d: R.d, x: R.x, y: R.y, t: t });
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    (window.requestAnimationFrame || setTimeout)(function () { ticking = false; measure(); });
+  }, { passive: true });
+  window.addEventListener('load', measure);
+  document.addEventListener('visibilitychange', function () {
+    if (!R) return;
+    if (document.visibilityState === 'hidden') {
+      if (R.since) { R.secs += (Date.now() - R.since) / 1000; R.since = 0; }
+      flushRead();
+    } else if (!R.since) R.since = Date.now();
+  });
+  window.addEventListener('pagehide', flushRead);
 
   /* 從 bfcache 還原：腳本不會重跑，要自己補這一步。 */
   window.addEventListener('pageshow', function (e) { if (e.persisted) view(true); });
