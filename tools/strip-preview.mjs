@@ -312,6 +312,9 @@ const bar = `
     <div class="pv-row"><span class="pv-lab">換科動畫</span><span class="pv-seg" data-k="f">
       <button data-v="x">疊著對拉</button><button data-v="a">同時淡入</button><button data-v="b">先出後進</button><button data-v="c">0.4 秒才換</button>
     </span></div>
+    <div class="pv-row"><span class="pv-lab">亮的標籤停在</span><span class="pv-seg" data-k="tp">
+      <button data-v="second">第二格</button><button data-v="left">最左邊</button><button data-v="center">正中間</button><button data-v="off">不捲動</button>
+    </span></div>
     <div class="pv-row"><span class="pv-lab">橫幅捲軸</span><span class="pv-seg" data-k="sb">
       <button data-v="hide">隱藏</button><button data-v="stable">留位（八科等高）</button><button data-v="auto">跟著需要</button>
     </span></div>
@@ -342,7 +345,7 @@ const bar = `
    自動播放 科別＋卡片滑動／上面大卡 自動（跟版面）／按標籤 就地切換／
    滑動 很慢 14／換科時 橫幅停在原處／一屏幾張 中／全部那條 接在大卡後面。
    ⚠ 手機那一側他還沒看，所以尺**先不收**，等他看完再一起定。 */
-  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', p: 'keep', w: 'w2', d: 'on', cur: '0' };
+  var DEF = { a: 'both', t: 'here', n: 'auto', g: 'g2', s: 's5', x: 'x4', f: 'x', l: 'l20', e: 'e2', sb: 'hide', tp: 'second', p: 'keep', w: 'w2', d: 'on', cur: '0' };
   var st = {};
   Object.keys(DEF).forEach(function (k) {
     var m = location.search.match(new RegExp('[?&]' + k + '=([a-z0-9]+)'));
@@ -380,6 +383,38 @@ const bar = `
        晚一點才換畫面），所以橫向滑動那一支要看 shown 不是 idx，
        不然它會去捲一組還沒被顯示出來的橫幅，切進來的時候就會跳一下。 */
   var shown = 0, fxTimer = null;
+  var tabRow = document.querySelector('.pv-tabs'), tabRaf = null;
+
+  /* 標籤那一列在手機上放不下（八格比畫面寬 470~500px），所以換科的時候要把
+     亮起來的那一顆捲進畫面。⚠ 不是捲到最左邊 —— 停在**第二格的位置**，
+     左邊留一格的餘裕，看得到「上一科是誰」，也看得出來這一列是可以滑的
+     （2026-09-26 使用者指定）。第二格的位置 ＝ 第二顆標籤在沒有捲動時的 x，
+     現算不寫死（標籤的字長不一樣，而且字級會跟著版面變）。
+     ⚠ 用自己寫的補間不用 scrollTo({behavior:'smooth'}) —— 後者的時間瀏覽器自己決定，
+     和這一頁的過場長度對不起來。曲線與長度都跟過場同一組。 */
+  function tabTarget() {
+    if (!tabRow || st.tp === 'off') return tabRow ? tabRow.scrollLeft : 0;
+    var max = tabRow.scrollWidth - tabRow.clientWidth;
+    if (max <= 0) return 0;
+    var t = tabs[idx], slot = 0;
+    if (st.tp === 'second' && tabs[1]) slot = tabs[1].offsetLeft - tabs[0].offsetLeft;
+    else if (st.tp === 'center') slot = (tabRow.clientWidth - t.offsetWidth) / 2;
+    return Math.max(0, Math.min(max, t.offsetLeft - tabs[0].offsetLeft - slot));
+  }
+  function scrollTabs() {
+    if (!tabRow) return;
+    var from = tabRow.scrollLeft, to = tabTarget(), d = to - from;
+    if (Math.abs(d) < 2) return;
+    if (tabRaf) cancelAnimationFrame(tabRaf);
+    var ms = Math.max(180, fxdur()), t0 = performance.now();
+    /* 和 --pv-fxease 同一條曲線（cubic-bezier(.16,1,.3,1)）的近似：前快後緩。 */
+    function ez(x) { return 1 - Math.pow(1 - x, 3); }
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / ms);
+      tabRow.scrollLeft = from + d * ez(k);
+      if (k < 1) tabRaf = requestAnimationFrame(step); else tabRaf = null;
+    })(t0);
+  }
   /* 過場多長、走哪一條曲線。
      ⚠ 長度預設「同標籤」是有原因的：標籤的顏色走 T 毫秒，圖卡也走 T，兩邊才會
        同時到位（2026-09-26 使用者回報過「標籤還沒全亮圖卡就先切」）。選短的那幾格
@@ -409,6 +444,7 @@ const bar = `
     var prev = idx;
     idx = (i + groups.length) % groups.length;
     tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === idx ? 'true' : 'false'); });
+    scrollTabs();
     if (fxTimer) { clearTimeout(fxTimer); fxTimer = null; }
     groups.forEach(function (g) { g.classList.remove('pv-dim'); g.classList.remove('pv-out'); });
     var T = fxdur();
@@ -524,7 +560,7 @@ const bar = `
     });
   });
   document.addEventListener('pointerdown', function (e) {
-    if (e.target.closest && (e.target.closest('.pv-rail') || e.target.closest('.pv-strip .card'))) stopAuto('touch');
+    if (e.target.closest && (e.target.closest('.pv-rail') || e.target.closest('.pv-tabs') || e.target.closest('.pv-strip .card'))) stopAuto('touch');
   }, true);
 
   /* ---- 切換條 ---- */
