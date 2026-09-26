@@ -74,13 +74,13 @@ const groups = TABS.map((s) => {
 }).join("\n");
 
 const tabs = TABS.map((s, i) => '<button class="pv-tab" type="button" data-spec="' + s.spec + '"'
-  + ' aria-selected="' + (i === 0 ? "true" : "false") + '">' + s.name
-  + '<span class="pv-n">' + (s.spec === "all" ? cards.length : (byCount[s.spec] || 0)) + '</span></button>').join("");
+  + ' aria-selected="' + (i === 0 ? "true" : "false") + '">' + s.name + '</button>').join("");
 
 const newArticles =
-  '<div class="cards pv-top">' + topHtml + '</div>\n'
+  '<div class="sec-head"><h2>最新文章</h2></div>'
+  + '<div class="cards pv-top">' + topHtml + '</div>\n'
   + '<div class="pv-strip">'
-  + '<div class="pv-shead"><span class="pv-stitle">照科別看</span>'
+  + '<div class="pv-shead"><h3 class="pv-stitle">照科別看</h3>'
   + '<span class="pv-hint" hidden>自動播放中 —— 點一下就停</span></div>'
   + '<div class="pv-tabs" role="tablist">' + tabs + '</div>'
   + '<div class="pv-groups">' + groups + '</div>'
@@ -124,7 +124,7 @@ html[data-pvn="3"] .pv-top .card[data-pvi="2"],
 html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
 
 .pv-shead { display: flex; align-items: baseline; gap: .7rem; margin: 0 0 .55rem; }
-.pv-stitle { font-size: .92rem; font-weight: 500; color: var(--ink); }
+.pv-stitle { margin: 0; font-size: .96rem; font-weight: 500; color: var(--ink); }
 .pv-hint { font-size: .76rem; color: var(--ink-soft); }
 
 /* 標籤：逐條照站上 .chips 的宣告抄過來（同字級、同內距、同圓角、同色權）。
@@ -139,7 +139,6 @@ html[data-pvn="3"] .pv-top .card[data-pvi="3"] { display: flex; }
   transition: background-color .15s ease, color .15s ease;
 }
 .pv-tab[aria-selected="true"] { background: var(--accent); color: var(--on-fill); border-color: var(--accent); }
-.pv-tab .pv-n { margin-left: .4em; opacity: .72; font-variant-numeric: tabular-nums; }
 .pv-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 /* 沒有 JS 的時候：七科依序攤開，每一科帶自己的小標，橫向仍然可以用手指滑。
@@ -154,6 +153,9 @@ html.pv-js .pv-group.pv-on { display: block; }
   display: flex; grid-template-columns: none; gap: 1rem; min-width: 0; max-width: 100%;
   overflow-x: auto; padding-bottom: .7rem;
   scroll-snap-type: x proximity; scrollbar-width: thin;
+  /* ⚠⚠ 自動滑動的時候一定要把吸附關掉。scroll-snap 會把每一幀的小位移
+     吸回最近的那一格，畫面上看到的是「每隔幾秒跳一張卡」，不是緩慢滑動
+     （桌機量到 0,0,0,0,388,388 —— 388 剛好是一張卡 370 ＋ 間距 16）。 */
   overscroll-behavior-x: contain;
 }
 .pv-rail.cards > .card {
@@ -170,6 +172,7 @@ html.pv-js .pv-group.pv-on { display: block; }
   border-radius: 12px; border: 1px dashed var(--accent-deep); color: var(--accent-deep);
   background: var(--card);
 }
+html[data-pvglide="1"] .pv-rail.cards { scroll-snap-type: none; }
 html[data-pvall="0"] .pv-all { display: none; }
 /* 「全部」那一條要不要把已經在上面當大卡的那幾張藏起來。 */
 html[data-pvd="on"][data-pvn="1"] .pv-group[data-spec="all"] .card[data-pvdup="1"],
@@ -278,8 +281,9 @@ const bar = `
   var hint = document.querySelector('.pv-hint');
   var panel = document.getElementById('pv-panel');
   var idx = 0, stopped = false, timer = null, raf = null;
-  var SPEED = { slow: 9000, mid: 6000, fast: 3500 };
-  var CAP = { slow: 35, mid: 60, fast: 90 };            /* 滑動速度的上限，px/s */
+  var SPEED = { slow: 9000, mid: 6000, fast: 3500 };    /* 一科至少停多久 */
+  var MAXD  = { slow: 45000, mid: 30000, fast: 18000 }; /* 一科最多停多久 */
+  var V     = { slow: 25, mid: 55, fast: 95 };          /* 滑動速度，px/s，定速 */
 
   D.classList.add('pv-js');
 
@@ -292,8 +296,9 @@ const bar = `
   function stopAuto(why) {
     if (stopped) return;
     stopped = true;
-    if (timer) { clearInterval(timer); timer = null; }
+    if (timer) { clearTimeout(timer); timer = null; }
     if (raf) { cancelAnimationFrame(raf); raf = null; }
+    D.removeAttribute('data-pvglide');
     if (hint) hint.hidden = true;
     measure(why || 'stopped');
   }
@@ -302,20 +307,25 @@ const bar = `
      所以看起來只是「這一科沒滑」）。要自己記一個累加器，再整個指派回去。
      速度不是給死的：照這一科實際滑得動的距離 ÷ 停留時間現算，
      讓它在換到下一科之前剛好滑完；三段速度各有自己的上限，再快就頭暈。 */
+  /* 這一科要停多久：滑得完就照滑完的時間（再加 1.2 秒讓人看清最後一張），
+     但不少於「至少停多久」、不多於「最多停多久」。二十篇那一條因此會停久一點。 */
+  function dwell() {
+    if (st.a !== 'both') return SPEED[st.s];
+    var r = railOf(idx), max = r ? r.scrollWidth - r.clientWidth : 0;
+    if (max < 3) return SPEED[st.s];
+    return Math.max(SPEED[st.s], Math.min(MAXD[st.s], (max / V[st.s]) * 1000 + 1200));
+  }
   function glide() {
     if (st.a !== 'both' || stopped) return;
+    D.setAttribute('data-pvglide', '1');
     var last = performance.now(), gi = idx, pos = 0;
     function step(now) {
-      if (stopped || st.a !== 'both') { raf = null; return; }
+      if (stopped || st.a !== 'both') { raf = null; D.removeAttribute('data-pvglide'); return; }
       var r = railOf(idx), dt = Math.min(0.05, (now - last) / 1000); last = now;
       if (gi !== idx) { gi = idx; pos = 0; }
       if (r) {
         var max = r.scrollWidth - r.clientWidth;
-        if (max > 2) {
-          var v = Math.min(CAP[st.s], max / Math.max(1, SPEED[st.s] / 1000 - 1.1));
-          pos = Math.min(max, pos + v * dt);
-          r.scrollLeft = pos;
-        }
+        if (max > 2) { pos = Math.min(max, pos + V[st.s] * dt); r.scrollLeft = pos; }
       }
       raf = requestAnimationFrame(step);
     }
@@ -324,11 +334,15 @@ const bar = `
   function startAuto() {
     if (stopped || st.a === 'off' || st.cur === '1') { if (hint) hint.hidden = true; return; }
     if (hint) hint.hidden = false;
-    timer = setInterval(function () {
-      var r = railOf(idx); if (r) r.scrollLeft = 0;
-      show(idx + 1);
-      measure('auto');
-    }, SPEED[st.s]);
+    (function next() {
+      timer = setTimeout(function () {
+        if (stopped) return;
+        var r = railOf(idx); if (r) r.scrollLeft = 0;
+        show(idx + 1);
+        measure('auto');
+        next();
+      }, dwell());
+    })();
     glide();
   }
 
@@ -337,7 +351,7 @@ const bar = `
     new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         if (stopped) return;
-        if (!e.isIntersecting) { if (raf) { cancelAnimationFrame(raf); raf = null; } if (timer) { clearInterval(timer); timer = null; } }
+        if (!e.isIntersecting) { if (raf) { cancelAnimationFrame(raf); raf = null; } if (timer) { clearTimeout(timer); timer = null; } }
         else if (!timer) { startAuto(); }
       });
     }, { threshold: 0.15 }).observe(strip);
@@ -385,7 +399,7 @@ const bar = `
     paint();
     if (k === 'a' || k === 's' || k === 'cur') {
       stopped = false;
-      if (timer) { clearInterval(timer); timer = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
       if (raf) { cancelAnimationFrame(raf); raf = null; }
       startAuto();
     }
@@ -414,10 +428,31 @@ const bar = `
     var total = document.documentElement.scrollHeight;
     var dy = docs ? docs.getBoundingClientRect().top + scrollY : 0;
     var r = railOf(idx), left = r ? Math.max(0, r.scrollWidth - r.clientWidth) : 0;
-    var seen = r ? (r.clientWidth / (r.querySelector('.card') ? r.querySelector('.card').getBoundingClientRect().width + 16 : 1)) : 0;
+    /* ⚠ 要抓「看得見的」第一張。「全部」那一條最前面幾張是重複卡、被藏起來了，
+       抓到它的話寬度是 0，一除就變成「一屏看到 22.63 張」。 */
+    var one = 0;
+    if (r) {
+      var cs = r.querySelectorAll('.card');
+      for (var i = 0; i < cs.length; i++) {
+        var wd = cs[i].getBoundingClientRect().width;
+        if (wd > 1) { one = wd + 16; break; }
+      }
+    }
+    var seen = one ? r.clientWidth / one : 0;
+    /* 現況的基準線：在正式站的 index.html 上逐寬度量出來的（2026-09-26）。
+       ⚠ 原本寫死一組 19.2／12.8，那是 390 寬的數字 —— 在電腦上印出來就是假話。
+       ⚠ index.html 的版面改過就要重量一次。 */
+    var BASE = [
+      { w: 1888, s: 8.1, d: 4.8 }, { w: 1440, s: 8.8, d: 5.2 }, { w: 1041, s: 8.4, d: 4.9 },
+      { w: 744, s: 9.7, d: 5.8 }, { w: 390, s: 19.2, d: 12.8 }, { w: 375, s: 19.7, d: 13.1 }
+    ];
+    var base = BASE[0];
+    for (var bi = 0; bi < BASE.length; bi++) {
+      if (Math.abs(BASE[bi].w - innerWidth) < Math.abs(base.w - innerWidth)) base = BASE[bi];
+    }
     panel.innerHTML =
-      '整頁 <b>' + (total / H).toFixed(1) + ' 屏</b>（現況 19.2）・醫師介紹在第 <b>'
-      + (dy / H).toFixed(1) + ' 屏</b>（現況 12.8）<br>'
+      '整頁 <b>' + (total / H).toFixed(1) + ' 屏</b>（現況 ' + base.s + '）・醫師介紹在第 <b>'
+      + (dy / H).toFixed(1) + ' 屏</b>（現況 ' + base.d + '，以 ' + base.w + ' 寬為準）<br>'
       + '這一科 <b>' + (tabs[idx] ? tabs[idx].textContent.replace(/\\d+$/, '') : '') + '</b>'
       + '・一屏看到 <b>' + seen.toFixed(2) + ' 張</b>・還能滑 <b>' + Math.round(left) + 'px</b>'
       + '・自動播放 <b>' + (stopped ? '已停' : (st.a === 'off' ? '關' : '進行中')) + '</b>'
